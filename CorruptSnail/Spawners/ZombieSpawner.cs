@@ -82,7 +82,7 @@ namespace CorruptSnail.Spawners
 
         private void OnNewZombie(int zombieNetHandle)
         {
-            int zombieHandle = API.NetToEnt(zombieNetHandle);
+            int zombieHandle = API.NetworkGetEntityFromNetworkId(zombieNetHandle);
             Ped zombie = new Ped(zombieHandle);
 
             zombie.Voice = "ALIENS";
