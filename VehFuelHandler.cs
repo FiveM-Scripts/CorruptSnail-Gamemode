@@ -9,6 +9,7 @@ namespace CorruptSnail
     class VehFuelHandler : BaseScript
     {
         public const string VEH_FUEL_DECOR = "_CORRUPTSNAIL_FUEL";
+        private const float VEH_FUEL_WARNING_THRESHOLD = 1000f;
 
         public VehFuelHandler()
         {
@@ -41,7 +42,7 @@ namespace CorruptSnail
 
                     if (veh.FuelLevel == 0f)
                         Screen.DisplayHelpTextThisFrame("No Fuel left");
-                    else if (veh.FuelLevel < 100f)
+                    else if (veh.FuelLevel < VEH_FUEL_WARNING_THRESHOLD)
                         Screen.DisplayHelpTextThisFrame("Low Fuel Level");
                 }
             }
