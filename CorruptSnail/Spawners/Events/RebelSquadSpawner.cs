@@ -75,12 +75,15 @@ namespace CorruptSnail.Spawners.Events
                 Ped[] rebels = new Ped[new Random().Next(1, REBELSQUAD_MAXMEMBERS)];
                 for (int i = 0; i < rebels.Length; i++)
                 {
+                    spawnPos.X++;
+                    spawnPos.Y++;
+
                     Ped rebel = await World.CreatePed(PedHash.Hillbilly01AMM, spawnPos);
                     API.SetPedSeeingRange(rebel.Handle, float.MaxValue);
                     API.SetPedCombatRange(rebel.Handle, 2);
                     API.SetPedHearingRange(rebel.Handle, float.MaxValue);
                     rebel.RelationshipGroup = RebelSquadGroup;
-                    rebel.Weapons.Give(WEAPON_LIST[new Random().Next(0, WEAPON_LIST.Length)], int.MaxValue, true, true);
+                    rebel.Weapons.Give(WEAPON_LIST[new Random().Next(WEAPON_LIST.Length)], int.MaxValue, true, true);
                     rebel.Accuracy = 100;
                     rebel.Armor = 100;
                     rebel.Task.WanderAround();

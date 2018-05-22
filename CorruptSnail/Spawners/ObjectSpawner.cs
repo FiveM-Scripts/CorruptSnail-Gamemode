@@ -51,7 +51,7 @@ namespace CorruptSnail.Spawners
             if (!Utils.IsPosInRadiusOfAPlayer(Players, spawnPos, SpawnerHost.SPAWN_MIN_DISTANCE))
             {
                 Prop obstacle = await World
-                    .CreateProp(API.GetHashKey(OBSTACLE_LIST[new Random().Next(0, OBSTACLE_LIST.Length)]), spawnPos, false, true);
+                    .CreateProp(API.GetHashKey(OBSTACLE_LIST[new Random().Next(OBSTACLE_LIST.Length)]), spawnPos, false, true);
                 obstacle.IsPositionFrozen = true;
 
                 obstacles.Add(obstacle);

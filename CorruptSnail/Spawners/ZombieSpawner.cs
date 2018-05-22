@@ -22,7 +22,7 @@ namespace CorruptSnail.Spawners
             zombies = new List<Ped>();
             ZombieGroup = World.AddRelationshipGroup("zombies");
 
-            EventHandlers["corruptsnail:client:new_zombie"] += new Action<int>(OnNewZombie);
+            EventHandlers["corruptsnail:client:newZombie"] += new Action<int>(OnNewZombie);
             Tick += OnTick;
         }
 
@@ -74,7 +74,7 @@ namespace CorruptSnail.Spawners
                 ZombieAttrChances(zombie);
 
                 zombie.Task.WanderAround();
-                TriggerServerEvent("corruptsnail:new_zombie", API.NetworkGetNetworkIdFromEntity(zombieHandle));
+                TriggerServerEvent("corruptsnail:newZombie", API.NetworkGetNetworkIdFromEntity(zombieHandle));
 
                 zombies.Add(zombie);
             }

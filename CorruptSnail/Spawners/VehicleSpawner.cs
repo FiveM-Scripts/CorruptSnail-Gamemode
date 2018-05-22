@@ -46,7 +46,7 @@ namespace CorruptSnail.Spawners
             if (!Utils.IsPosInRadiusOfAPlayer(Players, spawnPos, SpawnerHost.SPAWN_MIN_DISTANCE))
             {
                 Vehicle veh = await World
-                    .CreateVehicle(VEH_LIST[new Random().Next(0, VEH_LIST.Length)], spawnPos);
+                    .CreateVehicle(VEH_LIST[new Random().Next(VEH_LIST.Length)], spawnPos);
                 Random random = new Random();
                 veh.EngineHealth = random.Next(0, 1000);
                 spawnedVeh = veh;

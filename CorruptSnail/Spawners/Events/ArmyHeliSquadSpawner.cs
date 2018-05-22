@@ -11,6 +11,7 @@ namespace CorruptSnail.Spawners.Events
         private const double ARMYHELI_CHANCE = 0.001;
         private const float ARMYHELI_SPAWNHEIGHT_OFFSET = 500f;
         private const int ARMYHELI_MIN_SPEED = 10;
+        private static VehicleHash[] HELI_LIST { get; } = { VehicleHash.Buzzard, VehicleHash.Savage, VehicleHash.Cargobob };
 
         private class ArmyHeliSquad
         {
@@ -69,7 +70,7 @@ namespace CorruptSnail.Spawners.Events
 
             if (!Utils.IsPosInRadiusOfAPlayer(Players, spawnPos, SpawnerHost.SPAWN_DESPAWN_DISTANCE))
             {
-                Vehicle heli = await World.CreateVehicle(VehicleHash.Buzzard, spawnPos);
+                Vehicle heli = await World.CreateVehicle(HELI_LIST[new Random().Next(HELI_LIST.Length)], spawnPos);
                 heli.IsInvincible = true;
                 heli.IsEngineRunning = true;
 
