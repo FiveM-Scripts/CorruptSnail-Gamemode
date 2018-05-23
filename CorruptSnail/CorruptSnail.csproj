@@ -31,7 +31,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="CitizenFX.Core">
-      <HintPath>..\..\..\..\..\..\..\Programme\FiveM\FiveM.app\citizen\clr2\lib\mono\4.5\CitizenFX.Core.dll</HintPath>
+      <HintPath>C:\Users\pongo\FiveM\FiveM.app\citizen\clr2\lib\mono\4.5\CitizenFX.Core.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="System" />

@@ -12,7 +12,7 @@ namespace CorruptSnail.Spawners
         private const int ZOMBIE_AMOUNT = 35;
         private const double ZOMBIE_ATTR_CHANCE = 0.5;
         private const int ZOMBIE_MAX_HEALTH = 500;
-        private const int ZOMBIE_MAX_ARMOR = 1000; 
+        private const int ZOMBIE_MAX_ARMOR = 500; 
 
         private List<Ped> zombies;
         public static RelationshipGroup ZombieGroup { get; private set; }
