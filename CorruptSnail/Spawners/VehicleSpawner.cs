@@ -7,8 +7,6 @@ namespace CorruptSnail.Spawners
 {
     class VehicleSpawner : BaseScript
     {
-        private const double VEH_CHANCE = 0.1;
-        
         private static VehicleHash[] VEH_LIST { get; } = { VehicleHash.Faggio, VehicleHash.Asterope, VehicleHash.Ingot,
             VehicleHash.Asea };
 
@@ -24,7 +22,7 @@ namespace CorruptSnail.Spawners
             if (LocalPlayer.Character != null)
             {
                 if (SpawnerHost.IsHost)
-                    if (spawnedVeh == null && new Random().NextDouble() < VEH_CHANCE)
+                    if (spawnedVeh == null && new Random().NextDouble() < SpawnerHost.SPAWN_EVENT_CHANCE)
                         SpawnRandomVeh();
 
                 if (spawnedVeh != null)

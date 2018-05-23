@@ -7,8 +7,6 @@ namespace CorruptSnail.Spawners.Ambient
 {
     class FarExplosionSpawner : BaseScript
     {
-        private const double EXPLOSION_CHANCE = 0.001;
-
         public FarExplosionSpawner()
         {
             Tick += OnTick;
@@ -19,7 +17,7 @@ namespace CorruptSnail.Spawners.Ambient
             if (LocalPlayer.Character != null)
             {
                 if (SpawnerHost.IsHost)
-                    if (new Random().NextDouble() <= EXPLOSION_CHANCE)
+                    if (new Random().NextDouble() <= SpawnerHost.SPAWN_EVENT_CHANCE)
                         SpawnFarExplosion();
             }
 

@@ -8,7 +8,6 @@ namespace CorruptSnail.Spawners.Events
 {
     class RebelSquadSpawner : BaseScript
     {
-        private const double REBELSQUAD_CHANCE = 0.001;
         private const int REBELSQUAD_MAXMEMBERS = 8;
         private static WeaponHash[] WEAPON_LIST { get; } = { WeaponHash.Pistol, WeaponHash.AssaultRifle, WeaponHash.PumpShotgun,
             WeaponHash.Bat };
@@ -38,7 +37,7 @@ namespace CorruptSnail.Spawners.Events
             if (LocalPlayer.Character != null)
             {
                 if (SpawnerHost.IsHost)
-                    if (rebelSquad == null && new Random().NextDouble() <= REBELSQUAD_CHANCE)
+                    if (rebelSquad == null && new Random().NextDouble() <= SpawnerHost.SPAWN_EVENT_CHANCE)
                         SpawnRandomRebelSquad();
 
                 if (rebelSquad != null)

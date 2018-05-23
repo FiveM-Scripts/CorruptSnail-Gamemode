@@ -8,7 +8,6 @@ namespace CorruptSnail.Spawners.Events
 {
     class ArmyHeliSquadSpawner : BaseScript
     {
-        private const double ARMYHELI_CHANCE = 0.001;
         private const float ARMYHELI_SPAWNHEIGHT_OFFSET = 500f;
         private const int ARMYHELI_MIN_SPEED = 10;
         private static VehicleHash[] HELI_LIST { get; } = { VehicleHash.Buzzard, VehicleHash.Savage, VehicleHash.Cargobob };
@@ -44,7 +43,7 @@ namespace CorruptSnail.Spawners.Events
             if (LocalPlayer.Character != null)
             {
                 if (SpawnerHost.IsHost)
-                    if (armyHeliSquad == null && new Random().NextDouble() <= ARMYHELI_CHANCE)
+                    if (armyHeliSquad == null && new Random().NextDouble() <= SpawnerHost.SPAWN_EVENT_CHANCE)
                         SpawnRandomArmyHeli();
 
                 if (armyHeliSquad != null)
