@@ -8,7 +8,8 @@ namespace CorruptSnail.Spawners.Ambient
     {
         private const int PLANE_SPAWNHEIGHT_MIN_OFFSET = 100;
         private const int PLANE_SPAWNHEIGHT_MAX_OFFSET = 500;
-        private static VehicleHash[] PLANE_LIST { get; } = { VehicleHash.Cuban800, VehicleHash.Hydra };
+        private static VehicleHash[] PLANE_LIST { get; } = { VehicleHash.Cuban800, VehicleHash.Lazer, VehicleHash.Hydra,
+            VehicleHash.Dodo };
 
         private class FlyingByPlane
         {
@@ -33,7 +34,7 @@ namespace CorruptSnail.Spawners.Ambient
         {
             if (LocalPlayer.Character != null)
             {
-                if (flyingByPlane == null && SpawnerHost.IsHost)
+                if (flyingByPlane == null && SpawnerHost.CanEventTrigger())
                     SpawnRandomFlyingByPlane();
                 else if (flyingByPlane != null)
                     if (!Utils.IsPosInRadiusOfAPlayer(Players, flyingByPlane.Plane.Position, SpawnerHost.SPAWN_DESPAWN_DISTANCE * 3))
