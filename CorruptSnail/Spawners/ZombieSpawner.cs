@@ -74,7 +74,7 @@ namespace CorruptSnail.Spawners
                 ZombieAttrChances(zombie);
 
                 zombie.Task.WanderAround();
-                TriggerServerEvent("corruptsnail:newZombie", API.NetworkGetNetworkIdFromEntity(zombieHandle));
+                TriggerServerEvent("corruptsnail:newZombie", API.PedToNet(zombieHandle));
 
                 zombies.Add(zombie);
             }
@@ -82,7 +82,7 @@ namespace CorruptSnail.Spawners
 
         private void OnNewZombie(int zombieNetHandle)
         {
-            int zombieHandle = API.NetworkGetEntityFromNetworkId(zombieNetHandle);
+            int zombieHandle = API.NetToPed(zombieNetHandle);
             Ped zombie = new Ped(zombieHandle);
 
             zombie.Voice = "ALIENS";

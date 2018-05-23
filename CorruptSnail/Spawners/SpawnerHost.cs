@@ -8,7 +8,7 @@ namespace CorruptSnail.Spawners
     {
         public const int SPAWN_MIN_DISTANCE = 100;
         public const int SPAWN_DESPAWN_DISTANCE = 500;
-        public const double SPAWN_EVENT_CHANCE = 0.001;
+        public const double SPAWN_EVENT_CHANCE = 0.0005;
         private const int SPAWN_HOST_DECIDE_DISTANCE = 500;
 
         public static bool IsHost { get; private set; }
