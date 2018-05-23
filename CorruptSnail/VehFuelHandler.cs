@@ -25,7 +25,7 @@ namespace CorruptSnail
             {
                 if (!EntityDecoration.HasDecor(veh, VEH_FUEL_DECOR))
                 {
-                    veh.FuelLevel = new Random().Next(0, 10000);
+                    veh.FuelLevel = new Random().Next(10000);
                     EntityDecoration.Set(veh, VEH_FUEL_DECOR, veh.FuelLevel);
                 }
                 else

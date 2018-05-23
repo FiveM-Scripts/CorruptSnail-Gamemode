@@ -5,9 +5,9 @@ using System.Threading.Tasks;
 
 namespace CorruptSnail.Spawners.Ambient
 {
-    class FarExplosionSpawner : BaseScript
+    class AmbientWarNoiseSpawner : BaseScript
     {
-        public FarExplosionSpawner()
+        public AmbientWarNoiseSpawner()
         {
             Tick += OnTick;
         }
@@ -17,8 +17,11 @@ namespace CorruptSnail.Spawners.Ambient
             if (LocalPlayer.Character != null)
             {
                 if (SpawnerHost.IsHost)
-                    if (new Random().NextDouble() <= SpawnerHost.SPAWN_EVENT_CHANCE)
+                {
+                    Random random = new Random();
+                    if (random.NextDouble() <= SpawnerHost.SPAWN_EVENT_CHANCE)
                         SpawnFarExplosion();
+                }
             }
 
             await Task.FromResult(0);

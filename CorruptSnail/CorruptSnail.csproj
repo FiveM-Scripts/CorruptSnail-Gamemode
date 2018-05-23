@@ -44,7 +44,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Spawners\Ambient\FarExplosionSpawner.cs" />
+    <Compile Include="Spawners\Ambient\AmbientWarNoiseSpawner.cs" />
     <Compile Include="Spawners\Events\RebelSquadSpawner.cs" />
     <Compile Include="Spawners\Events\ArmyHeliSquadSpawner.cs" />
     <Compile Include="Spawners\TimeSync.cs" />
