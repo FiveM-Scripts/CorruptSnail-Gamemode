@@ -71,11 +71,12 @@ namespace CorruptSnail.Spawners.Events
 
             if (!Utils.IsPosInRadiusOfAPlayer(Players, spawnPos, SpawnerHost.SPAWN_MIN_DISTANCE))
             {
-                Ped[] rebels = new Ped[new Random().Next(1, REBELSQUAD_MAXMEMBERS)];
-                for (int i = 0; i < rebels.Length; i++)
+                int rebelAmount = new Random().Next(1, REBELSQUAD_MAXMEMBERS);
+                Ped[] rebels = new Ped[rebelAmount];
+                for (int i = 0; i < rebelAmount; i++)
                 {
-                    spawnPos.X++;
-                    spawnPos.Y++;
+                    //spawnPos.X++;
+                    //spawnPos.Y++;
 
                     Ped rebel = await World.CreatePed(PedHash.Hillbilly01AMM, spawnPos);
                     API.SetPedSeeingRange(rebel.Handle, float.MaxValue);
