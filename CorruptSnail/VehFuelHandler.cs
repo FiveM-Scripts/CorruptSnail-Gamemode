@@ -1,7 +1,6 @@
 ﻿using CitizenFX.Core;
 using CitizenFX.Core.UI;
 using CorruptSnail.Util;
-using System;
 using System.Threading.Tasks;
 
 namespace CorruptSnail
@@ -25,12 +24,12 @@ namespace CorruptSnail
             {
                 if (!EntityDecoration.HasDecor(veh, VEH_FUEL_DECOR))
                 {
-                    veh.FuelLevel = new Random().Next(10000);
+                    veh.FuelLevel = Utils.GetRandomInt(10000);
                     EntityDecoration.Set(veh, VEH_FUEL_DECOR, veh.FuelLevel);
                 }
                 else
                 {
-                    if (veh.GetPedOnSeat(VehicleSeat.Driver) == playerPed)
+                    if (veh.GetPedOnSeat(VehicleSeat.Driver) == playerPed && !veh.IsInAir)
                     {
                         float newFuelLevel = EntityDecoration.Get<float>(veh, VEH_FUEL_DECOR) - veh.Speed * 0.01f;
                         if (newFuelLevel < 0f)

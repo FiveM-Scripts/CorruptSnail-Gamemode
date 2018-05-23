@@ -1,4 +1,5 @@
 ﻿using CitizenFX.Core;
+using CitizenFX.Core.Native;
 using System;
 
 namespace CorruptSnail.Util
@@ -7,9 +8,8 @@ namespace CorruptSnail.Util
     {
         public static Vector3 GetRandomSpawnPosFromPlayer(Player player, int minDist, int maxDist)
         {
-            Random random = new Random();
-            Vector3 spawnPos = player.Character.GetOffsetPosition(new Vector3(random.Next(-minDist, minDist),
-                random.Next(minDist, maxDist), 0f));
+            Vector3 spawnPos = player.Character.GetOffsetPosition(new Vector3(GetRandomInt(-minDist, minDist),
+                GetRandomInt(minDist, maxDist), 0f));
             spawnPos.Z = World.GetGroundHeight(spawnPos);
             return spawnPos;
         }
@@ -21,6 +21,26 @@ namespace CorruptSnail.Util
                     return true;
 
             return false;
+        }
+
+        public static int GetRandomInt(int end)
+        {
+            return API.GetRandomIntInRange(0, end);
+        }
+
+        public static int GetRandomInt(int start, int end)
+        {
+            return API.GetRandomIntInRange(start, end);
+        }
+
+        public static float GetRandomFloat(float end)
+        {
+            return API.GetRandomFloatInRange(0, end);
+        }
+
+        public static float GetRandomFloat(float start, float end)
+        {
+            return API.GetRandomFloatInRange(start, end);
         }
     }
 }

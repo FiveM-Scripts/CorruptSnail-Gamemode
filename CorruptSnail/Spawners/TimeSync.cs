@@ -1,6 +1,5 @@
 ﻿using CitizenFX.Core;
 using System;
-using System.Threading.Tasks;
 
 namespace CorruptSnail.Spawners
 {

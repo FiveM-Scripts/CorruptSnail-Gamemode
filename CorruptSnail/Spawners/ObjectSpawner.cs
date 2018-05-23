@@ -1,7 +1,6 @@
 ﻿using CitizenFX.Core;
 using CitizenFX.Core.Native;
 using CorruptSnail.Util;
-using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -27,11 +26,9 @@ namespace CorruptSnail.Spawners
         {
             if (LocalPlayer.Character != null)
             {
-                if (SpawnerHost.IsHost)
-                    if (obstacles.Count < OBJECT_AMOUNT)
-                        SpawnRandomObstacle();
-
-                if (obstacles.Count > 0)
+                if (SpawnerHost.IsHost && obstacles.Count < OBJECT_AMOUNT)
+                    SpawnRandomObstacle();
+                else if (obstacles.Count > 0)
                     foreach (Prop obstacle in obstacles.ToArray())
                         if (!Utils.IsPosInRadiusOfAPlayer(Players, obstacle.Position, SpawnerHost.SPAWN_DESPAWN_DISTANCE))
                         {
@@ -51,7 +48,7 @@ namespace CorruptSnail.Spawners
             if (!Utils.IsPosInRadiusOfAPlayer(Players, spawnPos, SpawnerHost.SPAWN_MIN_DISTANCE))
             {
                 Prop obstacle = await World
-                    .CreateProp(API.GetHashKey(OBSTACLE_LIST[new Random().Next(OBSTACLE_LIST.Length)]), spawnPos, false, true);
+                    .CreateProp(API.GetHashKey(OBSTACLE_LIST[Utils.GetRandomInt(OBSTACLE_LIST.Length)]), spawnPos, false, true);
                 obstacle.IsPositionFrozen = true;
 
                 obstacles.Add(obstacle);

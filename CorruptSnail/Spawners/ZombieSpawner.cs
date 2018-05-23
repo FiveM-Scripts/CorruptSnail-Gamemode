@@ -1,6 +1,5 @@
 ﻿using CitizenFX.Core;
 using CitizenFX.Core.Native;
-using CorruptSnail.Spawners.Events;
 using CorruptSnail.Util;
 using System;
 using System.Collections.Generic;
@@ -12,6 +11,7 @@ namespace CorruptSnail.Spawners
     {
         private const int ZOMBIE_AMOUNT = 35;
         private const double ZOMBIE_ATTR_CHANCE = 0.5;
+        private const int ZOMBIE_MAX_HEALTH = 500;
         private const int ZOMBIE_MAX_ARMOR = 1000; 
 
         private List<Ped> zombies;
@@ -30,11 +30,9 @@ namespace CorruptSnail.Spawners
         {
             if (LocalPlayer.Character != null)
             {
-                if (SpawnerHost.IsHost)
-                    if (zombies.Count < ZOMBIE_AMOUNT)
-                        SpawnRandomZombie();
-
-                if (zombies.Count > 0)
+                if (SpawnerHost.IsHost && zombies.Count < ZOMBIE_AMOUNT)
+                    SpawnRandomZombie();
+                else if (zombies.Count > 0)
                     foreach (Ped zombie in zombies.ToArray())
                         if (!Utils.IsPosInRadiusOfAPlayer(Players, zombie.Position, SpawnerHost.SPAWN_DESPAWN_DISTANCE)
                             || zombie.IsDead)
@@ -56,21 +54,23 @@ namespace CorruptSnail.Spawners
             {
                 Ped zombie = await World.CreatePed(PedHash.Zombie01, spawnPos);
                 int zombieHandle = zombie.Handle;
-                API.SetPedSeeingRange(zombieHandle, float.MaxValue);
                 API.SetPedCombatRange(zombieHandle, 2);
                 API.SetPedHearingRange(zombieHandle, float.MaxValue);
                 API.SetPedCombatAttributes(zombieHandle, 46, true);
                 API.SetPedCombatAttributes(zombieHandle, 5, true);
                 API.SetPedCombatAttributes(zombieHandle, 1, false);
                 API.SetPedCombatAttributes(zombieHandle, 0, false);
-                API.SetPedCombatAbility(zombieHandle, 2);
+                API.SetPedCombatAbility(zombieHandle, 0);
                 API.SetAiMeleeWeaponDamageModifier(float.MaxValue);
                 API.SetPedRagdollBlockingFlags(zombieHandle, 4);
                 API.SetPedCanPlayAmbientAnims(zombieHandle, false);
-                zombie.Armor = new Random().Next(0, ZOMBIE_MAX_ARMOR);
+
+                int randHealth = Utils.GetRandomInt(1, ZOMBIE_MAX_HEALTH);
+                zombie.MaxHealth = randHealth;
+                zombie.Health = randHealth;
+                zombie.Armor = Utils.GetRandomInt(ZOMBIE_MAX_ARMOR);
                 zombie.RelationshipGroup = ZombieGroup;
                 ZombieGroup.SetRelationshipBetweenGroups(LocalPlayer.Character.RelationshipGroup, Relationship.Hate, true);
-                ZombieGroup.SetRelationshipBetweenGroups(RebelSquadSpawner.RebelSquadGroup, Relationship.Hate, true);
                 ZombieAttrChances(zombie);
 
                 zombie.Task.WanderAround();
@@ -104,7 +104,7 @@ namespace CorruptSnail.Spawners
 
         private bool AttrChance()
         {
-            return new Random().NextDouble() <= ZOMBIE_ATTR_CHANCE;
+            return Utils.GetRandomFloat(1f) <= ZOMBIE_ATTR_CHANCE;
         }
     }
 }

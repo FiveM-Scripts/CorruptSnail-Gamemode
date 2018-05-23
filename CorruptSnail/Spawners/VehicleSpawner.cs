@@ -1,6 +1,5 @@
 ﻿using CitizenFX.Core;
 using CorruptSnail.Util;
-using System;
 using System.Threading.Tasks;
 
 namespace CorruptSnail.Spawners
@@ -21,11 +20,9 @@ namespace CorruptSnail.Spawners
         {
             if (LocalPlayer.Character != null)
             {
-                if (SpawnerHost.IsHost)
-                    if (spawnedVeh == null && new Random().NextDouble() < SpawnerHost.SPAWN_EVENT_CHANCE)
-                        SpawnRandomVeh();
-
-                if (spawnedVeh != null)
+                if (spawnedVeh == null && SpawnerHost.CanEventTrigger())
+                    SpawnRandomVeh();
+                else if (spawnedVeh != null)
                     if (!Utils.IsPosInRadiusOfAPlayer(Players, spawnedVeh.Position, SpawnerHost.SPAWN_DESPAWN_DISTANCE)
                         || spawnedVeh.EngineHealth == 0f)
                     {
@@ -44,9 +41,10 @@ namespace CorruptSnail.Spawners
             if (!Utils.IsPosInRadiusOfAPlayer(Players, spawnPos, SpawnerHost.SPAWN_MIN_DISTANCE))
             {
                 Vehicle veh = await World
-                    .CreateVehicle(VEH_LIST[new Random().Next(VEH_LIST.Length)], spawnPos);
-                Random random = new Random();
-                veh.EngineHealth = random.Next(0, 1000);
+                    .CreateVehicle(VEH_LIST[Utils.GetRandomInt(VEH_LIST.Length)], spawnPos);
+                veh.Health = Utils.GetRandomInt(1000);
+                veh.EngineHealth = Utils.GetRandomInt(1000);
+                veh.PetrolTankHealth = Utils.GetRandomInt(1000);
                 spawnedVeh = veh;
             }
         }

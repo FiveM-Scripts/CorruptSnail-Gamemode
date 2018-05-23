@@ -45,6 +45,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Spawners\Ambient\AmbientWarNoiseSpawner.cs" />
+    <Compile Include="Spawners\Ambient\FlyingByPlaneSpawner.cs" />
     <Compile Include="Spawners\Events\RebelSquadSpawner.cs" />
     <Compile Include="Spawners\Events\ArmyHeliSquadSpawner.cs" />
     <Compile Include="Spawners\TimeSync.cs" />

@@ -1,4 +1,5 @@
 ﻿using CitizenFX.Core;
+using CorruptSnail.Util;
 using System.Threading.Tasks;
 
 namespace CorruptSnail.Spawners
@@ -40,6 +41,11 @@ namespace CorruptSnail.Spawners
             }
 
             await Task.FromResult(0);
+        }
+
+        public static bool CanEventTrigger()
+        {
+            return IsHost && Utils.GetRandomFloat(1f) <= SPAWN_EVENT_CHANCE;
         }
     }
 }
