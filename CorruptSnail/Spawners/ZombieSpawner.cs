@@ -28,19 +28,16 @@ namespace CorruptSnail.Spawners
 
         private async Task OnTick()
         {
-            if (LocalPlayer.Character != null)
-            {
-                if (SpawnerHost.IsHost && zombies.Count < ZOMBIE_AMOUNT)
-                    SpawnRandomZombie();
-                else if (zombies.Count > 0)
-                    foreach (Ped zombie in zombies.ToArray())
-                        if (!Utils.IsPosInRadiusOfAPlayer(Players, zombie.Position, SpawnerHost.SPAWN_DESPAWN_DISTANCE)
-                            || zombie.IsDead)
-                        {
-                            zombie.MarkAsNoLongerNeeded();
-                            zombies.Remove(zombie);
-                        }
-            }
+            if (SpawnerHost.IsHost && zombies.Count < ZOMBIE_AMOUNT)
+                SpawnRandomZombie();
+            else if (zombies.Count > 0)
+                foreach (Ped zombie in zombies.ToArray())
+                    if (!Utils.IsPosInRadiusOfAPlayer(Players, zombie.Position, SpawnerHost.SPAWN_DESPAWN_DISTANCE)
+                        || zombie.IsDead)
+                    {
+                        zombie.MarkAsNoLongerNeeded();
+                        zombies.Remove(zombie);
+                    }
 
             await Task.FromResult(0);
         }
@@ -83,10 +80,11 @@ namespace CorruptSnail.Spawners
         private void OnNewZombie(int zombieNetHandle)
         {
             int zombieHandle = API.NetToPed(zombieNetHandle);
-            Ped zombie = new Ped(zombieHandle);
-
-            zombie.Voice = "ALIENS";
-            zombie.IsPainAudioEnabled = false;
+            Ped zombie = new Ped(zombieHandle)
+            {
+                Voice = "ALIENS",
+                IsPainAudioEnabled = false
+            };
 
             API.RequestAnimSet("move_m@drunk@verydrunk");
             API.SetPedMovementClipset(zombieHandle, "move_m@drunk@verydrunk", 1f);

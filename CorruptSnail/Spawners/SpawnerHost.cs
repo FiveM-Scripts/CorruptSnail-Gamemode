@@ -1,4 +1,5 @@
 ﻿using CitizenFX.Core;
+using CitizenFX.Core.Native;
 using CorruptSnail.Util;
 using System.Threading.Tasks;
 
@@ -22,7 +23,7 @@ namespace CorruptSnail.Spawners
 
         private async Task OnTick()
         {
-            if (LocalPlayer.Character != null && LocalPlayer.Character.Exists())
+            if (API.NetworkIsSessionStarted() && !API.GetIsLoadingScreenActive())
             {
                 Ped playerPed = LocalPlayer.Character;
                 int lowestServerId = int.MaxValue;

@@ -18,18 +18,15 @@ namespace CorruptSnail.Spawners
 
         private async Task OnTick()
         {
-            if (LocalPlayer.Character != null)
-            {
-                if (spawnedVeh == null && SpawnerHost.CanEventTrigger())
-                    SpawnRandomVeh();
-                else if (spawnedVeh != null)
-                    if (!Utils.IsPosInRadiusOfAPlayer(Players, spawnedVeh.Position, SpawnerHost.SPAWN_DESPAWN_DISTANCE)
-                        || spawnedVeh.EngineHealth == 0f)
-                    {
-                        spawnedVeh.MarkAsNoLongerNeeded();
-                        spawnedVeh = null;
-                    }
-            }
+            if (SpawnerHost.CanEventTrigger() && spawnedVeh == null)
+                SpawnRandomVeh();
+            else if (spawnedVeh != null)
+                if (!Utils.IsPosInRadiusOfAPlayer(Players, spawnedVeh.Position, SpawnerHost.SPAWN_DESPAWN_DISTANCE)
+                    || spawnedVeh.EngineHealth == 0f)
+                {
+                    spawnedVeh.MarkAsNoLongerNeeded();
+                    spawnedVeh = null;
+                }
 
             await Task.FromResult(0);
         }

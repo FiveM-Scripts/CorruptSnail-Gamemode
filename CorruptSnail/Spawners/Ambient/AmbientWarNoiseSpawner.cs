@@ -14,7 +14,7 @@ namespace CorruptSnail.Spawners.Ambient
 
         private async Task OnTick()
         {
-            if (LocalPlayer.Character != null && SpawnerHost.CanEventTrigger())
+            if (SpawnerHost.CanEventTrigger())
                 SpawnFarExplosion();
 
             await Task.FromResult(0);

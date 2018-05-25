@@ -8,7 +8,7 @@ namespace CorruptSnail.Spawners.Events
     class RebelSquadSpawner : BaseScript
     {
         private const int REBELSQUAD_MAXMEMBERS = 8;
-        private const double REBELSQUAD_FRIENDLY_CHANCE = 0.5;
+        private const float REBELSQUAD_FRIENDLY_CHANCE = 0.5f;
         private static WeaponHash[] WEAPON_LIST { get; } = { WeaponHash.Pistol, WeaponHash.AssaultRifle, WeaponHash.PumpShotgun,
             WeaponHash.Bat };
 
@@ -34,29 +34,26 @@ namespace CorruptSnail.Spawners.Events
 
         private async Task OnTick()
         {
-            if (LocalPlayer.Character != null)
+            if (SpawnerHost.CanEventTrigger() && rebelSquad == null)
+                SpawnRandomRebelSquad();
+            else if (rebelSquad != null)
             {
-                if (rebelSquad == null && SpawnerHost.CanEventTrigger())
-                    SpawnRandomRebelSquad();
-                else if (rebelSquad != null)
+                bool allObsolete = true;
+                for (int i = 0; i < rebelSquad.Rebels.Length; i++)
                 {
-                    bool allObsolete = true;
-                    for (int i = 0; i < rebelSquad.Rebels.Length; i++)
+                    Ped rebel = rebelSquad.Rebels[i];
+                    if (rebel.Exists())
                     {
-                        Ped rebel = rebelSquad.Rebels[i];
-                        if (rebel.Exists())
-                        {
-                            if (!Utils.IsPosInRadiusOfAPlayer(Players, rebel.Position, SpawnerHost.SPAWN_DESPAWN_DISTANCE)
-                                || rebel.IsDead)
-                                rebel.MarkAsNoLongerNeeded();
-                            else
-                                allObsolete = false;
-                        }
+                        if (!Utils.IsPosInRadiusOfAPlayer(Players, rebel.Position, SpawnerHost.SPAWN_DESPAWN_DISTANCE)
+                            || rebel.IsDead)
+                            rebel.MarkAsNoLongerNeeded();
+                        else
+                            allObsolete = false;
                     }
-
-                    if (allObsolete)
-                        rebelSquad = null;
                 }
+
+                if (allObsolete)
+                    rebelSquad = null;
             }
 
             await Task.FromResult(0);

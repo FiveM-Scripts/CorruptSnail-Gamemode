@@ -1,4 +1,5 @@
 ﻿using CitizenFX.Core;
+using CitizenFX.Core.Native;
 using CorruptSnail.Util;
 using System.Threading.Tasks;
 
@@ -32,18 +33,15 @@ namespace CorruptSnail.Spawners.Ambient
 
         private async Task OnTick()
         {
-            if (LocalPlayer.Character != null)
-            {
-                if (flyingByPlane == null && SpawnerHost.CanEventTrigger())
-                    SpawnRandomFlyingByPlane();
-                else if (flyingByPlane != null)
-                    if (!Utils.IsPosInRadiusOfAPlayer(Players, flyingByPlane.Plane.Position, SpawnerHost.SPAWN_DESPAWN_DISTANCE * 3))
-                    {
-                        flyingByPlane.Plane.MarkAsNoLongerNeeded();
-                        flyingByPlane.Pilot.MarkAsNoLongerNeeded();
-                        flyingByPlane = null;
-                    }
-            }
+            if (SpawnerHost.CanEventTrigger() && flyingByPlane == null)
+                SpawnRandomFlyingByPlane();
+            else if (flyingByPlane != null)
+                if (!Utils.IsPosInRadiusOfAPlayer(Players, flyingByPlane.Plane.Position, SpawnerHost.SPAWN_DESPAWN_DISTANCE * 3))
+                {
+                    flyingByPlane.Plane.MarkAsNoLongerNeeded();
+                    flyingByPlane.Pilot.MarkAsNoLongerNeeded();
+                    flyingByPlane = null;
+                }
 
             await Task.FromResult(0);
         }

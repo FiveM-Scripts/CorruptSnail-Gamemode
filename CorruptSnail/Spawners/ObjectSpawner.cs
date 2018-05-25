@@ -24,18 +24,15 @@ namespace CorruptSnail.Spawners
 
         private async Task OnTick()
         {
-            if (LocalPlayer.Character != null)
-            {
-                if (SpawnerHost.IsHost && obstacles.Count < OBJECT_AMOUNT)
-                    SpawnRandomObstacle();
-                else if (obstacles.Count > 0)
-                    foreach (Prop obstacle in obstacles.ToArray())
-                        if (!Utils.IsPosInRadiusOfAPlayer(Players, obstacle.Position, SpawnerHost.SPAWN_DESPAWN_DISTANCE))
-                        {
-                            obstacle.Delete();
-                            obstacles.Remove(obstacle);
-                        }
-            }
+            if (SpawnerHost.IsHost && obstacles.Count < OBJECT_AMOUNT)
+                SpawnRandomObstacle();
+            else if (obstacles.Count > 0)
+                foreach (Prop obstacle in obstacles.ToArray())
+                    if (!Utils.IsPosInRadiusOfAPlayer(Players, obstacle.Position, SpawnerHost.SPAWN_DESPAWN_DISTANCE))
+                    {
+                        obstacle.Delete();
+                        obstacles.Remove(obstacle);
+                    }
 
             await Task.FromResult(0);
         }

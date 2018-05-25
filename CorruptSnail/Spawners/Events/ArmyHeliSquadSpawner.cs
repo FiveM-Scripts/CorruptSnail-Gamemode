@@ -41,20 +41,17 @@ namespace CorruptSnail.Spawners.Events
 
         private async Task OnTick()
         {
-            if (LocalPlayer.Character != null)
-            {
-                if (armyHeliSquad == null && SpawnerHost.CanEventTrigger())
-                    SpawnRandomArmyHeli();
-                else if (armyHeliSquad != null)
-                    if (!Utils.IsPosInRadiusOfAPlayer(Players, armyHeliSquad.Heli.Position, SpawnerHost.SPAWN_DESPAWN_DISTANCE * 3))
-                    {
-                        armyHeliSquad.Heli.MarkAsNoLongerNeeded();
-                        armyHeliSquad.Pilot.MarkAsNoLongerNeeded();
-                        armyHeliSquad.Gunman1.MarkAsNoLongerNeeded();
-                        armyHeliSquad.Gunman2.MarkAsNoLongerNeeded();
-                        armyHeliSquad = null;
-                    }
-            }
+            if (SpawnerHost.CanEventTrigger() && armyHeliSquad == null)
+                SpawnRandomArmyHeli();
+            else if (armyHeliSquad != null)
+                if (!Utils.IsPosInRadiusOfAPlayer(Players, armyHeliSquad.Heli.Position, SpawnerHost.SPAWN_DESPAWN_DISTANCE * 3))
+                {
+                    armyHeliSquad.Heli.MarkAsNoLongerNeeded();
+                    armyHeliSquad.Pilot.MarkAsNoLongerNeeded();
+                    armyHeliSquad.Gunman1.MarkAsNoLongerNeeded();
+                    armyHeliSquad.Gunman2.MarkAsNoLongerNeeded();
+                    armyHeliSquad = null;
+                }
 
             await Task.FromResult(0);
         }

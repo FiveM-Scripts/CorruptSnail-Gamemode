@@ -26,21 +26,18 @@ namespace CorruptSnail.Spawners
 
         private async Task OnTick()
         {
-            if (LocalPlayer.Character != null)
-            {
-                if (SpawnerHost.IsHost && weapons.Count < WEAPON_AMOUNT)
-                    SpawnRandomWeapon();
-                else if (weapons.Count > 0)
-                    for (int i = weapons.Count - 1; i > 0; i--)
+            if (SpawnerHost.IsHost && weapons.Count < WEAPON_AMOUNT)
+                SpawnRandomWeapon();
+            else if (weapons.Count > 0)
+                for (int i = weapons.Count - 1; i > 0; i--)
+                {
+                    int obj = weapons[i];
+                    if (!Utils.IsPosInRadiusOfAPlayer(Players, API.GetEntityCoords(obj, false), SpawnerHost.SPAWN_DESPAWN_DISTANCE))
                     {
-                        int obj = weapons[i];
-                        if (!Utils.IsPosInRadiusOfAPlayer(Players, API.GetEntityCoords(obj, false), SpawnerHost.SPAWN_DESPAWN_DISTANCE))
-                        {
-                            API.DeleteObject(ref obj);
-                            weapons.Remove(obj);
-                        }
+                        API.DeleteObject(ref obj);
+                        weapons.Remove(obj);
                     }
-            }
+                }
 
             await Task.FromResult(0);
         }
@@ -48,7 +45,7 @@ namespace CorruptSnail.Spawners
         private void SpawnRandomWeapon()
         {
             Vector3 spawnPos = Utils.GetRandomSpawnPosFromPlayer(LocalPlayer, SpawnerHost.SPAWN_MIN_DISTANCE, SpawnerHost.SPAWN_DESPAWN_DISTANCE);
-            spawnPos.Z--;
+            spawnPos.Z++;
 
             if (!Utils.IsPosInRadiusOfAPlayer(Players, spawnPos, SpawnerHost.SPAWN_MIN_DISTANCE))
             {
