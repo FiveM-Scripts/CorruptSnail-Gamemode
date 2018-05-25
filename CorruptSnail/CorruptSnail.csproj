@@ -48,7 +48,8 @@
     <Compile Include="Spawners\Ambient\FlyingByPlaneSpawner.cs" />
     <Compile Include="Spawners\Events\RebelSquadSpawner.cs" />
     <Compile Include="Spawners\Events\ArmyHeliSquadSpawner.cs" />
-    <Compile Include="Spawners\TimeSync.cs" />
+    <Compile Include="Spawners\WeaponSpawner.cs" />
+    <Compile Include="TimeSync.cs" />
     <Compile Include="Spawners\VehicleSpawner.cs" />
     <Compile Include="Spawners\ZombieSpawner.cs" />
     <Compile Include="Spawners\SpawnerHost.cs" />

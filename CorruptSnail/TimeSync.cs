@@ -1,7 +1,7 @@
 ﻿using CitizenFX.Core;
 using System;
 
-namespace CorruptSnail.Spawners
+namespace CorruptSnail
 {
     class TimeSync : BaseScript
     {
