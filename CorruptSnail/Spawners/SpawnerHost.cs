@@ -10,7 +10,7 @@ namespace CorruptSnail.Spawners
     {
         public const float SPAWN_MIN_DISTANCE = 100f;
         public const float SPAWN_DESPAWN_DISTANCE = 350f;
-        public const double SPAWN_EVENT_CHANCE = 0.0005;
+        public const double SPAWN_EVENT_CHANCE = 0.005;
         public const int SPAWN_TICK_RATE = 100;
         private const float SPAWN_HOST_DECIDE_DISTANCE = 500f;
 

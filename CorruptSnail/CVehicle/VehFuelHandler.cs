@@ -20,8 +20,6 @@ namespace CorruptSnail.CVehicle
 
         private async Task OnTick()
         {
-            await Delay(100);
-
             Ped playerPed; Vehicle veh;
             if ((playerPed = LocalPlayer.Character) != null && (veh = playerPed.CurrentVehicle) != null)
             {
@@ -34,7 +32,7 @@ namespace CorruptSnail.CVehicle
                 {
                     if (veh.GetPedOnSeat(VehicleSeat.Driver) == playerPed && !veh.IsInAir)
                     {
-                        float newFuelLevel = EntityDecoration.Get<float>(veh, VEH_FUEL_DECOR) - veh.Speed * 0.1f;
+                        float newFuelLevel = EntityDecoration.Get<float>(veh, VEH_FUEL_DECOR) - veh.Speed * 0.01f;
                         if (newFuelLevel < 0f)
                             newFuelLevel = 0f;
                         EntityDecoration.Set(veh, VEH_FUEL_DECOR, newFuelLevel);
@@ -48,6 +46,8 @@ namespace CorruptSnail.CVehicle
                         Screen.DisplayHelpTextThisFrame("Low Fuel Level");
                 }
             }
+
+            await Task.FromResult(0);
         }
     }
 }
