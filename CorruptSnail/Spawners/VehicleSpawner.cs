@@ -7,7 +7,7 @@ namespace CorruptSnail.Spawners
     class VehicleSpawner : BaseScript
     {
         private static VehicleHash[] VEH_LIST { get; } = { VehicleHash.Faggio, VehicleHash.Asterope, VehicleHash.Ingot,
-            VehicleHash.Asea };
+            VehicleHash.Asea, VehicleHash.Sultan, VehicleHash.Technical };
 
         private Vehicle spawnedVeh;
 
@@ -18,24 +18,24 @@ namespace CorruptSnail.Spawners
 
         private async Task OnTick()
         {
+            await Delay(SpawnerHost.SPAWN_TICK_RATE);
+
             if (SpawnerHost.CanEventTrigger() && spawnedVeh == null)
                 SpawnRandomVeh();
             else if (spawnedVeh != null)
-                if (!Utils.IsPosInRadiusOfAPlayer(Players, spawnedVeh.Position, SpawnerHost.SPAWN_DESPAWN_DISTANCE)
+                if (!Utils.IsPosShitSpawn(Players, spawnedVeh.Position, SpawnerHost.SPAWN_DESPAWN_DISTANCE)
                     || spawnedVeh.EngineHealth == 0f)
                 {
                     spawnedVeh.MarkAsNoLongerNeeded();
                     spawnedVeh = null;
                 }
-
-            await Task.FromResult(0);
         }
 
         private async void SpawnRandomVeh()
         {
-            Vector3 spawnPos = Utils.GetRandomSpawnPosFromPlayer(LocalPlayer, SpawnerHost.SPAWN_MIN_DISTANCE, SpawnerHost.SPAWN_DESPAWN_DISTANCE);
+            Vector3 spawnPos = Utils.GetRandomSpawnPosFromPlayer(Game.Player, SpawnerHost.SPAWN_MIN_DISTANCE, SpawnerHost.SPAWN_DESPAWN_DISTANCE);
 
-            if (!Utils.IsPosInRadiusOfAPlayer(Players, spawnPos, SpawnerHost.SPAWN_MIN_DISTANCE))
+            if (!Utils.IsPosShitSpawn(Players, spawnPos, SpawnerHost.SPAWN_MIN_DISTANCE))
             {
                 Vehicle veh = await World
                     .CreateVehicle(VEH_LIST[Utils.GetRandomInt(VEH_LIST.Length)], spawnPos);

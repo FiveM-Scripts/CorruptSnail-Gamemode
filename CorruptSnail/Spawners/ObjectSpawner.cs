@@ -24,25 +24,25 @@ namespace CorruptSnail.Spawners
 
         private async Task OnTick()
         {
+            await Delay(SpawnerHost.SPAWN_TICK_RATE);
+
             if (SpawnerHost.IsHost && obstacles.Count < OBJECT_AMOUNT)
                 SpawnRandomObstacle();
             else if (obstacles.Count > 0)
                 foreach (Prop obstacle in obstacles.ToArray())
-                    if (!Utils.IsPosInRadiusOfAPlayer(Players, obstacle.Position, SpawnerHost.SPAWN_DESPAWN_DISTANCE))
+                    if (!Utils.IsPosShitSpawn(Players, obstacle.Position, SpawnerHost.SPAWN_DESPAWN_DISTANCE))
                     {
                         obstacle.Delete();
                         obstacles.Remove(obstacle);
                     }
-
-            await Task.FromResult(0);
         }
 
         private async void SpawnRandomObstacle()
         {
-            Vector3 spawnPos = Utils.GetRandomSpawnPosFromPlayer(LocalPlayer, SpawnerHost.SPAWN_MIN_DISTANCE, SpawnerHost.SPAWN_DESPAWN_DISTANCE);
-            spawnPos.Z--;
+            Vector3 spawnPos = Utils.GetRandomSpawnPosFromPlayer(Game.Player, SpawnerHost.SPAWN_MIN_DISTANCE, SpawnerHost.SPAWN_DESPAWN_DISTANCE);
+            spawnPos.Z -= 3;
 
-            if (!Utils.IsPosInRadiusOfAPlayer(Players, spawnPos, SpawnerHost.SPAWN_MIN_DISTANCE))
+            if (!Utils.IsPosShitSpawn(Players, spawnPos, SpawnerHost.SPAWN_MIN_DISTANCE))
             {
                 Prop obstacle = await World
                     .CreateProp(API.GetHashKey(OBSTACLE_LIST[Utils.GetRandomInt(OBSTACLE_LIST.Length)]), spawnPos, false, true);

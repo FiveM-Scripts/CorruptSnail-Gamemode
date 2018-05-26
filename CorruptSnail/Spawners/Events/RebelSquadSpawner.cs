@@ -34,6 +34,8 @@ namespace CorruptSnail.Spawners.Events
 
         private async Task OnTick()
         {
+            await Delay(SpawnerHost.SPAWN_TICK_RATE);
+
             if (SpawnerHost.CanEventTrigger() && rebelSquad == null)
                 SpawnRandomRebelSquad();
             else if (rebelSquad != null)
@@ -44,7 +46,7 @@ namespace CorruptSnail.Spawners.Events
                     Ped rebel = rebelSquad.Rebels[i];
                     if (rebel.Exists())
                     {
-                        if (!Utils.IsPosInRadiusOfAPlayer(Players, rebel.Position, SpawnerHost.SPAWN_DESPAWN_DISTANCE)
+                        if (!Utils.IsPosShitSpawn(Players, rebel.Position, SpawnerHost.SPAWN_DESPAWN_DISTANCE)
                             || rebel.IsDead)
                             rebel.MarkAsNoLongerNeeded();
                         else
@@ -55,16 +57,13 @@ namespace CorruptSnail.Spawners.Events
                 if (allObsolete)
                     rebelSquad = null;
             }
-
-            await Task.FromResult(0);
         }
 
         private async void SpawnRandomRebelSquad()
         {
-            Vector3 spawnPos = Utils.GetRandomSpawnPosFromPlayer(LocalPlayer, SpawnerHost.SPAWN_MIN_DISTANCE, SpawnerHost.SPAWN_DESPAWN_DISTANCE);
-            spawnPos.Z++;
+            Vector3 spawnPos = Utils.GetRandomSpawnPosFromPlayer(Game.Player, SpawnerHost.SPAWN_MIN_DISTANCE, SpawnerHost.SPAWN_DESPAWN_DISTANCE);
 
-            if (!Utils.IsPosInRadiusOfAPlayer(Players, spawnPos, SpawnerHost.SPAWN_MIN_DISTANCE))
+            if (!Utils.IsPosShitSpawn(Players, spawnPos, SpawnerHost.SPAWN_MIN_DISTANCE))
             {
                 int rebelAmount = Utils.GetRandomInt(1, REBELSQUAD_MAXMEMBERS);
                 Ped[] rebels = new Ped[rebelAmount];
@@ -84,9 +83,9 @@ namespace CorruptSnail.Spawners.Events
                     rebels[i] = rebel;
                 }
                 if (Utils.GetRandomFloat(1f) > REBELSQUAD_FRIENDLY_CHANCE)
-                    RebelSquadGroup.SetRelationshipBetweenGroups(LocalPlayer.Character.RelationshipGroup, Relationship.Hate, true);
+                    RebelSquadGroup.SetRelationshipBetweenGroups(Game.PlayerPed.RelationshipGroup, Relationship.Hate, true);
                 else
-                    RebelSquadGroup.SetRelationshipBetweenGroups(LocalPlayer.Character.RelationshipGroup, Relationship.Respect, true);
+                    RebelSquadGroup.SetRelationshipBetweenGroups(Game.PlayerPed.RelationshipGroup, Relationship.Respect, true);
                 RebelSquadGroup.SetRelationshipBetweenGroups(ZombieSpawner.ZombieGroup, Relationship.Hate, true);
                 RebelSquadGroup.SetRelationshipBetweenGroups(ArmyHeliSquadSpawner.ArmyHeliSquadGroup, Relationship.Hate, true);
 

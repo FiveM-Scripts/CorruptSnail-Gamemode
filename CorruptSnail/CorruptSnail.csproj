@@ -44,6 +44,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CPlayer\PlayerSpawner.cs" />
+    <Compile Include="CPlayer\Safezones.cs" />
     <Compile Include="Spawners\Ambient\AmbientWarNoiseSpawner.cs" />
     <Compile Include="Spawners\Ambient\FlyingByPlaneSpawner.cs" />
     <Compile Include="Spawners\Events\RebelSquadSpawner.cs" />
@@ -58,7 +60,7 @@
     <Compile Include="Atmosphere.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Util\Utils.cs" />
-    <Compile Include="VehFuelHandler.cs" />
+    <Compile Include="CVehicle\VehFuelHandler.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

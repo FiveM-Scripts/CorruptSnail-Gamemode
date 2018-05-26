@@ -21,35 +21,40 @@ namespace CorruptSnail.Spawners
         {
             weapons = new List<int>();
 
-            Tick += OnTick;
+            //Tick += OnTick;
         }
 
         private async Task OnTick()
         {
+            await Delay(SpawnerHost.SPAWN_TICK_RATE);
+
             if (SpawnerHost.IsHost && weapons.Count < WEAPON_AMOUNT)
                 SpawnRandomWeapon();
             else if (weapons.Count > 0)
                 for (int i = weapons.Count - 1; i > 0; i--)
                 {
                     int obj = weapons[i];
-                    if (!Utils.IsPosInRadiusOfAPlayer(Players, API.GetEntityCoords(obj, false), SpawnerHost.SPAWN_DESPAWN_DISTANCE))
+                    if (!Utils.IsPosShitSpawn(Players, API.GetEntityCoords(obj, false), SpawnerHost.SPAWN_DESPAWN_DISTANCE))
                     {
                         API.DeleteObject(ref obj);
                         weapons.Remove(obj);
                     }
                 }
-
-            await Task.FromResult(0);
         }
 
         private void SpawnRandomWeapon()
         {
-            Vector3 spawnPos = Utils.GetRandomSpawnPosFromPlayer(LocalPlayer, SpawnerHost.SPAWN_MIN_DISTANCE, SpawnerHost.SPAWN_DESPAWN_DISTANCE);
-            spawnPos.Z++;
+            Vector3 spawnPos = Utils.GetRandomSpawnPosFromPlayer(Game.Player, SpawnerHost.SPAWN_MIN_DISTANCE, SpawnerHost.SPAWN_DESPAWN_DISTANCE);
 
-            if (!Utils.IsPosInRadiusOfAPlayer(Players, spawnPos, SpawnerHost.SPAWN_MIN_DISTANCE))
+            if (!Utils.IsPosShitSpawn(Players, spawnPos, SpawnerHost.SPAWN_MIN_DISTANCE))
             {
-                int obj = API.CreateWeaponObject((uint) WEAPON_LIST[Utils.GetRandomInt(WEAPON_LIST.Length)], Utils.GetRandomInt(WEAPON_MAXAMMO),
+                uint modelHash = (uint) WEAPON_LIST[Utils.GetRandomInt(WEAPON_LIST.Length)];
+               /* while (!API.HasWeaponAssetLoaded(modelHash))
+                {
+                    await Delay(1);
+                    API.RequestWeaponAsset(modelHash, 31, 0);
+                }*/
+                int obj = API.CreateWeaponObject(modelHash, Utils.GetRandomInt(WEAPON_MAXAMMO),
                     spawnPos.X, spawnPos.Y, spawnPos.Z, true, Utils.GetRandomFloat(360f), 1);
                 weapons.Add(obj);
             }

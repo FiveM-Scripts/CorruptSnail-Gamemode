@@ -1,22 +1,27 @@
 ﻿using CitizenFX.Core;
 using CitizenFX.Core.Native;
+using CorruptSnail.CPlayer;
 
 namespace CorruptSnail.Util
 {
     class Utils
     {
-        public static Vector3 GetRandomSpawnPosFromPlayer(Player player, int minDist, int maxDist)
+        public static Vector3 GetRandomSpawnPosFromPlayer(Player player, float minDist, float maxDist)
         {
-            Vector3 spawnPos = player.Character.GetOffsetPosition(new Vector3(GetRandomInt(-minDist, minDist),
-                GetRandomInt(minDist, maxDist), 0f));
+            Vector3 spawnPos = player.Character.GetOffsetPosition(new Vector3(GetRandomFloat(-minDist, minDist),
+                GetRandomFloat(minDist, maxDist), 0f));
             spawnPos.Z = World.GetGroundHeight(spawnPos);
             return spawnPos;
         }
 
-        public static bool IsPosInRadiusOfAPlayer(PlayerList playerList, Vector3 pos, int radius)
+        public static bool IsPosShitSpawn(PlayerList playerList, Vector3 pos, float radius)
         {
             foreach (Player player in playerList)
                 if (player.Character != null && World.GetDistance(player.Character.Position, pos) < radius)
+                    return true;
+
+            foreach (Safezones.Safezone safezone in Safezones.SAFEZONES)
+                if (World.GetDistance(pos, safezone.Pos) < safezone.Range)
                     return true;
 
             return false;

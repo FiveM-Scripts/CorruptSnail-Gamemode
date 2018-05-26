@@ -9,7 +9,7 @@ namespace CorruptSnail.Spawners
 {
     class ZombieSpawner : BaseScript
     {
-        private const int ZOMBIE_AMOUNT = 35;
+        private const int ZOMBIE_AMOUNT = 30;
         private const double ZOMBIE_ATTR_CHANCE = 0.5;
         private const int ZOMBIE_MAX_HEALTH = 500;
         private const int ZOMBIE_MAX_ARMOR = 500; 
@@ -28,26 +28,25 @@ namespace CorruptSnail.Spawners
 
         private async Task OnTick()
         {
+            await Delay(SpawnerHost.SPAWN_TICK_RATE);
+
             if (SpawnerHost.IsHost && zombies.Count < ZOMBIE_AMOUNT)
                 SpawnRandomZombie();
             else if (zombies.Count > 0)
                 foreach (Ped zombie in zombies.ToArray())
-                    if (!Utils.IsPosInRadiusOfAPlayer(Players, zombie.Position, SpawnerHost.SPAWN_DESPAWN_DISTANCE)
+                    if (!Utils.IsPosShitSpawn(Players, zombie.Position, SpawnerHost.SPAWN_DESPAWN_DISTANCE)
                         || zombie.IsDead)
                     {
                         zombie.MarkAsNoLongerNeeded();
                         zombies.Remove(zombie);
                     }
-
-            await Task.FromResult(0);
         }
 
         private async void SpawnRandomZombie()
         {
-            Vector3 spawnPos = Utils.GetRandomSpawnPosFromPlayer(LocalPlayer, SpawnerHost.SPAWN_MIN_DISTANCE, SpawnerHost.SPAWN_DESPAWN_DISTANCE);
-            spawnPos.Z++;
+            Vector3 spawnPos = Utils.GetRandomSpawnPosFromPlayer(Game.Player, SpawnerHost.SPAWN_MIN_DISTANCE, SpawnerHost.SPAWN_DESPAWN_DISTANCE);
 
-            if (!Utils.IsPosInRadiusOfAPlayer(Players, spawnPos, SpawnerHost.SPAWN_MIN_DISTANCE))
+            if (!Utils.IsPosShitSpawn(Players, spawnPos, SpawnerHost.SPAWN_MIN_DISTANCE))
             {
                 Ped zombie = await World.CreatePed(PedHash.Zombie01, spawnPos);
                 int zombieHandle = zombie.Handle;
@@ -67,7 +66,7 @@ namespace CorruptSnail.Spawners
                 zombie.Health = randHealth;
                 zombie.Armor = Utils.GetRandomInt(ZOMBIE_MAX_ARMOR);
                 zombie.RelationshipGroup = ZombieGroup;
-                ZombieGroup.SetRelationshipBetweenGroups(LocalPlayer.Character.RelationshipGroup, Relationship.Hate, true);
+                ZombieGroup.SetRelationshipBetweenGroups(Game.PlayerPed.RelationshipGroup, Relationship.Hate, true);
                 ZombieAttrChances(zombie);
 
                 zombie.Task.WanderAround();

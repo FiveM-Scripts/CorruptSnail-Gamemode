@@ -33,25 +33,25 @@ namespace CorruptSnail.Spawners.Ambient
 
         private async Task OnTick()
         {
+            await Delay(SpawnerHost.SPAWN_TICK_RATE);
+
             if (SpawnerHost.CanEventTrigger() && flyingByPlane == null)
                 SpawnRandomFlyingByPlane();
             else if (flyingByPlane != null)
-                if (!Utils.IsPosInRadiusOfAPlayer(Players, flyingByPlane.Plane.Position, SpawnerHost.SPAWN_DESPAWN_DISTANCE * 3))
+                if (!Utils.IsPosShitSpawn(Players, flyingByPlane.Plane.Position, SpawnerHost.SPAWN_DESPAWN_DISTANCE * 3))
                 {
                     flyingByPlane.Plane.MarkAsNoLongerNeeded();
                     flyingByPlane.Pilot.MarkAsNoLongerNeeded();
                     flyingByPlane = null;
                 }
-
-            await Task.FromResult(0);
         }
 
         private async void SpawnRandomFlyingByPlane()
         {
-            Vector3 spawnPos = Utils.GetRandomSpawnPosFromPlayer(LocalPlayer, SpawnerHost.SPAWN_DESPAWN_DISTANCE, SpawnerHost.SPAWN_DESPAWN_DISTANCE * 2);
+            Vector3 spawnPos = Utils.GetRandomSpawnPosFromPlayer(Game.Player, SpawnerHost.SPAWN_DESPAWN_DISTANCE, SpawnerHost.SPAWN_DESPAWN_DISTANCE * 2);
             spawnPos.Z += Utils.GetRandomInt(PLANE_SPAWNHEIGHT_MIN_OFFSET, PLANE_SPAWNHEIGHT_MAX_OFFSET);
 
-            if (!Utils.IsPosInRadiusOfAPlayer(Players, spawnPos, SpawnerHost.SPAWN_DESPAWN_DISTANCE))
+            if (!Utils.IsPosShitSpawn(Players, spawnPos, SpawnerHost.SPAWN_DESPAWN_DISTANCE))
             {
                 Vehicle plane = await World.CreateVehicle(PLANE_LIST[Utils.GetRandomInt(PLANE_LIST.Length)], spawnPos,
                     Utils.GetRandomInt(360));
