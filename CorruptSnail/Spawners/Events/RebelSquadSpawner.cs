@@ -8,7 +8,7 @@ namespace CorruptSnail.Spawners.Events
     class RebelSquadSpawner : BaseScript
     {
         private const int REBELSQUAD_MAXMEMBERS = 8;
-        private const float REBELSQUAD_FRIENDLY_CHANCE = 0.5f;
+        private const string REBELSQUAD_DECOR = "_HOSTILE_REBELS";
         private static WeaponHash[] WEAPON_LIST { get; } = { WeaponHash.Pistol, WeaponHash.AssaultRifle, WeaponHash.PumpShotgun,
             WeaponHash.Bat };
 
@@ -48,7 +48,7 @@ namespace CorruptSnail.Spawners.Events
                     {
                         if (!Utils.IsPosShitSpawn(Players, rebel.Position, SpawnerHost.SPAWN_DESPAWN_DISTANCE)
                             || rebel.IsDead)
-                            rebel.MarkAsNoLongerNeeded();
+                            rebel.SetDecor(SpawnerHost.SPAWN_DESPAWN_DECOR, true);
                         else
                             allObsolete = false;
                     }
@@ -69,9 +69,6 @@ namespace CorruptSnail.Spawners.Events
                 Ped[] rebels = new Ped[rebelAmount];
                 for (int i = 0; i < rebelAmount; i++)
                 {
-                    spawnPos.X += 5;
-                    spawnPos.Y += 5;
-
                     Ped rebel = await World.CreatePed(PedHash.Hillbilly01AMM, spawnPos);
                     API.SetPedCombatRange(rebel.Handle, 2);
                     API.SetPedHearingRange(rebel.Handle, float.MaxValue);
@@ -80,17 +77,21 @@ namespace CorruptSnail.Spawners.Events
                     rebel.Accuracy = 100;
                     rebel.Armor = 100;
                     rebel.Task.WanderAround();
+                    rebel.SetDecor(REBELSQUAD_DECOR, true);
                     rebels[i] = rebel;
                 }
-                if (Utils.GetRandomFloat(1f) > REBELSQUAD_FRIENDLY_CHANCE)
-                    RebelSquadGroup.SetRelationshipBetweenGroups(Game.PlayerPed.RelationshipGroup, Relationship.Hate, true);
-                else
-                    RebelSquadGroup.SetRelationshipBetweenGroups(Game.PlayerPed.RelationshipGroup, Relationship.Respect, true);
                 RebelSquadGroup.SetRelationshipBetweenGroups(ZombieSpawner.ZombieGroup, Relationship.Hate, true);
                 RebelSquadGroup.SetRelationshipBetweenGroups(ArmyHeliSquadSpawner.ArmyHeliSquadGroup, Relationship.Hate, true);
 
                 rebelSquad = new RebelSquad(rebels);
             }
+        }
+
+        private void HandleRebelSquads()
+        {
+            foreach (Ped ped in EntityEnum.GetPeds())
+                if (ped.HasDecor(REBELSQUAD_DECOR))
+                    ped.RelationshipGroup.SetRelationshipBetweenGroups(Game.PlayerPed.RelationshipGroup, Relationship.Hate, true);
         }
     }
 }

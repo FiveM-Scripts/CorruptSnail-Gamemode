@@ -10,6 +10,7 @@ namespace CorruptSnail.Spawners.Events
         private const int ARMYHELI_SPAWNHEIGHT_MIN_OFFSET = 100;
         private const int ARMYHELI_SPAWNHEIGHT_MAX_OFFSET = 500;
         private const int ARMYHELI_MIN_SPEED = 10;
+        private const string ARMYHELI_DECOR = "_TOUGH_AF_FRIENDS";
         private static VehicleHash[] HELI_LIST { get; } = { VehicleHash.Buzzard, VehicleHash.Buzzard2,
             VehicleHash.Savage, VehicleHash.Cargobob };
 
@@ -48,12 +49,14 @@ namespace CorruptSnail.Spawners.Events
             else if (armyHeliSquad != null)
                 if (!Utils.IsPosShitSpawn(Players, armyHeliSquad.Heli.Position, SpawnerHost.SPAWN_DESPAWN_DISTANCE * 3))
                 {
-                    armyHeliSquad.Heli.MarkAsNoLongerNeeded();
-                    armyHeliSquad.Pilot.MarkAsNoLongerNeeded();
-                    armyHeliSquad.Gunman1.MarkAsNoLongerNeeded();
-                    armyHeliSquad.Gunman2.MarkAsNoLongerNeeded();
+                    armyHeliSquad.Heli.SetDecor(SpawnerHost.SPAWN_DESPAWN_DECOR, true);
+                    armyHeliSquad.Pilot.SetDecor(SpawnerHost.SPAWN_DESPAWN_DECOR, true);
+                    armyHeliSquad.Gunman1.SetDecor(SpawnerHost.SPAWN_DESPAWN_DECOR, true);
+                    armyHeliSquad.Gunman2.SetDecor(SpawnerHost.SPAWN_DESPAWN_DECOR, true);
                     armyHeliSquad = null;
                 }
+
+            HandleArmyHeliSquads();
         }
 
         private async void SpawnRandomArmyHeli()
@@ -73,6 +76,7 @@ namespace CorruptSnail.Spawners.Events
                 pilot.RelationshipGroup = ArmyHeliSquadGroup;
                 pilot.SetIntoVehicle(heli, VehicleSeat.Driver);
                 pilot.AlwaysKeepTask = true;
+                pilot.SetDecor(ARMYHELI_DECOR, true);
                 Vector3 targetPos = Game.PlayerPed
                     .GetOffsetPosition(new Vector3(0f, -SpawnerHost.SPAWN_DESPAWN_DISTANCE * 100f, 0f));
                 API.TaskHeliMission(pilot.Handle, heli.Handle, 0, 0, targetPos.X, targetPos.Y, targetPos.Z,
@@ -88,15 +92,22 @@ namespace CorruptSnail.Spawners.Events
                     gunman.Accuracy = 100;
                     gunman.AlwaysKeepTask = true;
                     gunman.Task.FightAgainstHatedTargets(float.MaxValue);
+                    gunman.SetDecor(ARMYHELI_DECOR, true);
                     gunmans[i] = gunman;
                 }
                 gunmans[0].SetIntoVehicle(heli, VehicleSeat.LeftRear);
                 gunmans[1].SetIntoVehicle(heli, VehicleSeat.RightRear);
-                ArmyHeliSquadGroup.SetRelationshipBetweenGroups(Game.PlayerPed.RelationshipGroup, Relationship.Respect, true);
                 ArmyHeliSquadGroup.SetRelationshipBetweenGroups(ZombieSpawner.ZombieGroup, Relationship.Hate);
 
                 armyHeliSquad = new ArmyHeliSquad(heli, pilot, gunmans[0], gunmans[1]);
             }
+        }
+
+        private void HandleArmyHeliSquads()
+        {
+            foreach (Ped ped in EntityEnum.GetPeds())
+                if (ped.HasDecor(ARMYHELI_DECOR))
+                    ped.RelationshipGroup.SetRelationshipBetweenGroups(Game.PlayerPed.RelationshipGroup, Relationship.Like, true);
         }
     }
 }

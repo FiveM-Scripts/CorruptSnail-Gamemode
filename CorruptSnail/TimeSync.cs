@@ -1,28 +1,17 @@
 ﻿using CitizenFX.Core;
+using CitizenFX.Core.Native;
 using System;
 
 namespace CorruptSnail
 {
     class TimeSync : BaseScript
     {
-        private bool synced = false;
-
         public TimeSync()
         {
             EventHandlers["playerSpawned"] += new Action(delegate {
-                if (!synced)
-                    TriggerServerEvent("corruptsnail:timeSync");
-                else
-                {
-                    TimeSpan currentTime = World.CurrentDayTime;
-                    TriggerServerEvent("corruptsnail:updateTime", currentTime.Hours, currentTime.Minutes, currentTime.Seconds);
-                }
-            });
-
-            EventHandlers["corruptsnail:client:timeSync"] += new Action<int, int, int>((timeH, timeM, timeS) =>
-            {
-                World.CurrentDayTime = new TimeSpan(timeH, timeM, timeS);
-                synced = true;
+                int h = 0; int m = 0; int s = 0;
+                API.NetworkGetServerTime(ref h, ref m, ref s);
+                API.NetworkOverrideClockTime(h, m, s);
             });
         }
     }

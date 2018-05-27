@@ -32,7 +32,7 @@ namespace CorruptSnail.Spawners
                 foreach (Prop obstacle in obstacles.ToArray())
                     if (!Utils.IsPosShitSpawn(Players, obstacle.Position, SpawnerHost.SPAWN_DESPAWN_DISTANCE))
                     {
-                        obstacle.Delete();
+                        obstacle.SetDecor(SpawnerHost.SPAWN_DESPAWN_DECOR, true);
                         obstacles.Remove(obstacle);
                     }
         }

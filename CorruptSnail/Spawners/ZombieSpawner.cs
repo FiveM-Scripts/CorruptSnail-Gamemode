@@ -12,7 +12,8 @@ namespace CorruptSnail.Spawners
         private const int ZOMBIE_AMOUNT = 30;
         private const double ZOMBIE_ATTR_CHANCE = 0.5;
         private const int ZOMBIE_MAX_HEALTH = 500;
-        private const int ZOMBIE_MAX_ARMOR = 500; 
+        private const int ZOMBIE_MAX_ARMOR = 500;
+        private const string ZOMBIE_DECOR = "_I_AM_RAWWRRR";
 
         private List<Ped> zombies;
         public static RelationshipGroup ZombieGroup { get; private set; }
@@ -22,7 +23,7 @@ namespace CorruptSnail.Spawners
             zombies = new List<Ped>();
             ZombieGroup = World.AddRelationshipGroup("zombies");
 
-            EventHandlers["corruptsnail:client:newZombie"] += new Action<int>(OnNewZombie);
+            EntityDecoration.RegisterProperty(ZOMBIE_DECOR, DecorationType.Bool);
             Tick += OnTick;
         }
 
@@ -37,9 +38,11 @@ namespace CorruptSnail.Spawners
                     if (!Utils.IsPosShitSpawn(Players, zombie.Position, SpawnerHost.SPAWN_DESPAWN_DISTANCE)
                         || zombie.IsDead)
                     {
-                        zombie.MarkAsNoLongerNeeded();
+                        zombie.SetDecor(SpawnerHost.SPAWN_DESPAWN_DECOR, true);
                         zombies.Remove(zombie);
                     }
+
+            HandleZombies();
         }
 
         private async void SpawnRandomZombie()
@@ -66,27 +69,29 @@ namespace CorruptSnail.Spawners
                 zombie.Health = randHealth;
                 zombie.Armor = Utils.GetRandomInt(ZOMBIE_MAX_ARMOR);
                 zombie.RelationshipGroup = ZombieGroup;
-                ZombieGroup.SetRelationshipBetweenGroups(Game.PlayerPed.RelationshipGroup, Relationship.Hate, true);
                 ZombieAttrChances(zombie);
 
                 zombie.Task.WanderAround();
-                TriggerServerEvent("corruptsnail:newZombie", API.PedToNet(zombieHandle));
+                zombie.SetDecor(ZOMBIE_DECOR, true);
 
                 zombies.Add(zombie);
             }
         }
 
-        private void OnNewZombie(int zombieNetHandle)
+        private void HandleZombies()
         {
-            int zombieHandle = API.NetToPed(zombieNetHandle);
-            Ped zombie = new Ped(zombieHandle)
+            foreach (Ped ped in EntityEnum.GetPeds())
             {
-                Voice = "ALIENS",
-                IsPainAudioEnabled = false
-            };
+                if (ped.HasDecor(ZOMBIE_DECOR))
+                {
+                    ped.Voice = "ALIENS";
+                    ped.IsPainAudioEnabled = false;
+                    ped.RelationshipGroup.SetRelationshipBetweenGroups(Game.PlayerPed.RelationshipGroup, Relationship.Hate, true);
 
-            API.RequestAnimSet("move_m@drunk@verydrunk");
-            API.SetPedMovementClipset(zombieHandle, "move_m@drunk@verydrunk", 1f);
+                    API.RequestAnimSet("move_m@drunk@verydrunk");
+                    API.SetPedMovementClipset(ped.Handle, "move_m@drunk@verydrunk", 1f);
+                }
+            }
         }
 
         private void ZombieAttrChances(Ped zombie)

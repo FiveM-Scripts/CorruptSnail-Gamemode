@@ -40,8 +40,8 @@ namespace CorruptSnail.Spawners.Ambient
             else if (flyingByPlane != null)
                 if (!Utils.IsPosShitSpawn(Players, flyingByPlane.Plane.Position, SpawnerHost.SPAWN_DESPAWN_DISTANCE * 3))
                 {
-                    flyingByPlane.Plane.MarkAsNoLongerNeeded();
-                    flyingByPlane.Pilot.MarkAsNoLongerNeeded();
+                    flyingByPlane.Plane.SetDecor(SpawnerHost.SPAWN_DESPAWN_DECOR, true);
+                    flyingByPlane.Pilot.SetDecor(SpawnerHost.SPAWN_DESPAWN_DECOR, true);
                     flyingByPlane = null;
                 }
         }

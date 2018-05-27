@@ -26,7 +26,7 @@ namespace CorruptSnail.Spawners
                 if (!Utils.IsPosShitSpawn(Players, spawnedVeh.Position, SpawnerHost.SPAWN_DESPAWN_DISTANCE)
                     || spawnedVeh.EngineHealth == 0f)
                 {
-                    spawnedVeh.MarkAsNoLongerNeeded();
+                    spawnedVeh.SetDecor(SpawnerHost.SPAWN_DESPAWN_DECOR, true);
                     spawnedVeh = null;
                 }
         }

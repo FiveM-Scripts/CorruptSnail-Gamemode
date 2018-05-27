@@ -41,7 +41,8 @@ function spawnVehicleToPlayer(model)
 		RequestModel(model)
 	end
 	
-	local veh = CreateVehicle(model, x + 2.5, y + 2.5, z + 1, 0.0, true, true)
+	local veh = CreateVehicle(model, x + 2.5, y + 2.5, z + 1, 0.0, true, false)
+	SetVehicleAsNoLongerNeeded(veh)
 	drawNotification("~g~Vehicle spawned!")
 end
 
