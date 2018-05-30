@@ -37,24 +37,29 @@ namespace CorruptSnail.CPlayer
             if (API.NetworkIsSessionStarted() && !API.GetIsLoadingScreenActive())
             {
                 Ped playerPed = Game.PlayerPed;
+                bool inSafezoneNow = false;
 
                 foreach (Safezone safezone in SAFEZONES)
-                    if (World.GetDistance(playerPed.Position, safezone.Pos) < safezone.Range
-                        && !inSafezone)
+                    if (World.GetDistance(playerPed.Position, safezone.Pos) < safezone.Range)
                     {
-                        inSafezone = true;
-                        TriggerEvent("corruptsnail:inZone", true);
-                        TriggerEvent("chatMessage", "", new int[] { 0, 255, 0 }, "\nYou are in a safezone now!\n"
-                            + "Zombies will not spawn and you can spawn stuff in the F6 menu.\n");
+                        inSafezoneNow = true;
+                        break;
                     }
-                    else if (World.GetDistance(playerPed.Position, safezone.Pos) > safezone.Range
-                        && inSafezone)
-                    {
-                        inSafezone = false;
-                        TriggerEvent("corruptsnail:inZone", false);
-                        TriggerEvent("chatMessage", "", new int[] { 255, 0, 0 }, "\nYou left the safezone!\n"
-                            + "Zombies will spawn now and you are unable to spawn stuff.\n");
-                    }
+
+                if (inSafezoneNow && !inSafezone)
+                {
+                    inSafezone = true;
+                    TriggerEvent("corruptsnail:inZone", true);
+                    TriggerEvent("chatMessage", "", new int[] { 0, 255, 0 }, "\nYou are in a safezone now!\n"
+                        + "Zombies will not spawn and you can spawn stuff in the F6 menu.\n");
+                }
+                else if (!inSafezoneNow && inSafezone)
+                {
+                    inSafezone = false;
+                    TriggerEvent("corruptsnail:inZone", false);
+                    TriggerEvent("chatMessage", "", new int[] { 255, 0, 0 }, "\nYou left the safezone!\n"
+                        + "Zombies will spawn now and you are unable to spawn stuff.\n");
+                }
             }
 
             await Task.FromResult(0);
