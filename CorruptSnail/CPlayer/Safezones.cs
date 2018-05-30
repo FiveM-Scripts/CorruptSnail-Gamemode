@@ -32,7 +32,7 @@ namespace CorruptSnail.CPlayer
 
         private async Task OnTick()
         {
-            await Delay(100);
+            await Delay(500);
 
             if (API.NetworkIsSessionStarted() && !API.GetIsLoadingScreenActive())
             {
