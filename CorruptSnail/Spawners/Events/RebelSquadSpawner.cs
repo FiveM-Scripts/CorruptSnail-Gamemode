@@ -69,7 +69,7 @@ namespace CorruptSnail.Spawners.Events
                 Ped[] rebels = new Ped[rebelAmount];
                 for (int i = 0; i < rebelAmount; i++)
                 {
-                    Ped rebel = await World.CreatePed(PedHash.Hillbilly01AMM, spawnPos);
+                    Ped rebel = await EntityUtil.CreatePed(PedHash.Hillbilly01AMM, PedType.PED_TYPE_MISSION, spawnPos);
                     API.SetPedCombatRange(rebel.Handle, 2);
                     API.SetPedHearingRange(rebel.Handle, float.MaxValue);
                     rebel.RelationshipGroup = RebelSquadGroup;
@@ -89,7 +89,7 @@ namespace CorruptSnail.Spawners.Events
 
         private void HandleRebelSquads()
         {
-            foreach (Ped ped in EntityEnum.GetPeds())
+            foreach (Ped ped in World.GetAllPeds())
                 if (ped.HasDecor(REBELSQUAD_DECOR))
                     ped.RelationshipGroup.SetRelationshipBetweenGroups(Game.PlayerPed.RelationshipGroup, Relationship.Hate, true);
         }

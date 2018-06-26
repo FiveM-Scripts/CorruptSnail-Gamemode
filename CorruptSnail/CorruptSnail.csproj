@@ -46,6 +46,7 @@
   <ItemGroup>
     <Compile Include="CPlayer\PlayerSpawner.cs" />
     <Compile Include="CPlayer\Safezones.cs" />
+    <Compile Include="Util\EntityUtil.cs" />
     <Compile Include="Spawners\Despawner.cs" />
     <Compile Include="Spawners\Ambient\AmbientWarNoiseSpawner.cs" />
     <Compile Include="Spawners\Ambient\FlyingByPlaneSpawner.cs" />
@@ -60,7 +61,6 @@
     <Compile Include="Spawners\ObjectSpawner.cs" />
     <Compile Include="Atmosphere.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Util\EntityEnum.cs" />
     <Compile Include="Util\Utils.cs" />
     <Compile Include="CVehicle\VehFuelHandler.cs" />
   </ItemGroup>

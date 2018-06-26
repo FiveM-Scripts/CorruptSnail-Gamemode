@@ -1,7 +1,6 @@
 ﻿using CitizenFX.Core;
 using CitizenFX.Core.Native;
 using CorruptSnail.Util;
-using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -51,7 +50,7 @@ namespace CorruptSnail.Spawners
 
             if (!Utils.IsPosShitSpawn(Players, spawnPos, SpawnerHost.SPAWN_MIN_DISTANCE))
             {
-                Ped zombie = await World.CreatePed(PedHash.Zombie01, spawnPos);
+                Ped zombie = await EntityUtil.CreatePed(PedHash.Zombie01, PedType.PED_TYPE_MISSION, spawnPos);
                 int zombieHandle = zombie.Handle;
                 API.SetPedCombatRange(zombieHandle, 2);
                 API.SetPedHearingRange(zombieHandle, float.MaxValue);
@@ -80,7 +79,7 @@ namespace CorruptSnail.Spawners
 
         private void HandleZombies()
         {
-            foreach (Ped ped in EntityEnum.GetPeds())
+            foreach (Ped ped in World.GetAllPeds())
             {
                 if (ped.HasDecor(ZOMBIE_DECOR))
                 {

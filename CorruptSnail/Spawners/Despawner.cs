@@ -15,15 +15,15 @@ namespace CorruptSnail.Spawners
         {
             await Delay(SpawnerHost.SPAWN_TICK_RATE);
 
-            foreach (Prop prop in EntityEnum.GetProps())
+            foreach (Prop prop in World.GetAllProps())
                 if (prop.HasDecor(SpawnerHost.SPAWN_DESPAWN_DECOR))
                     prop.MarkAsNoLongerNeeded();
 
-            foreach (Ped ped in EntityEnum.GetPeds())
+            foreach (Ped ped in World.GetAllPeds())
                 if (ped.HasDecor(SpawnerHost.SPAWN_DESPAWN_DECOR))
                     ped.MarkAsNoLongerNeeded();
 
-            foreach (Vehicle veh in EntityEnum.GetVehicles())
+            foreach (Vehicle veh in World.GetAllVehicles())
                 if (veh.HasDecor(SpawnerHost.SPAWN_DESPAWN_DECOR))
                     veh.MarkAsNoLongerNeeded();
         }

@@ -53,12 +53,12 @@ namespace CorruptSnail.Spawners.Ambient
 
             if (!Utils.IsPosShitSpawn(Players, spawnPos, SpawnerHost.SPAWN_DESPAWN_DISTANCE))
             {
-                Vehicle plane = await World.CreateVehicle(PLANE_LIST[Utils.GetRandomInt(PLANE_LIST.Length)], spawnPos,
+                Vehicle plane = await EntityUtil.CreateVehicle(PLANE_LIST[Utils.GetRandomInt(PLANE_LIST.Length)], spawnPos,
                     Utils.GetRandomInt(360));
                 plane.IsInvincible = true;
                 plane.IsEngineRunning = true;
 
-                Ped pilot = await World.CreatePed(PedHash.Pilot01SMM, spawnPos);
+                Ped pilot = await EntityUtil.CreatePed(PedHash.Pilot01SMM, PedType.PED_TYPE_MISSION, spawnPos);
                 pilot.IsInvincible = true;
                 pilot.SetIntoVehicle(plane, VehicleSeat.Driver);
                 pilot.AlwaysKeepTask = true;

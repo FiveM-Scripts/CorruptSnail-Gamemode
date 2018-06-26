@@ -66,12 +66,12 @@ namespace CorruptSnail.Spawners.Events
 
             if (!Utils.IsPosShitSpawn(Players, spawnPos, SpawnerHost.SPAWN_DESPAWN_DISTANCE))
             {
-                Vehicle heli = await World.CreateVehicle(HELI_LIST[Utils.GetRandomInt(HELI_LIST.Length)], spawnPos,
+                Vehicle heli = await EntityUtil.CreateVehicle(HELI_LIST[Utils.GetRandomInt(HELI_LIST.Length)], spawnPos,
                     Utils.GetRandomInt(360));
                 heli.IsInvincible = true;
                 heli.IsEngineRunning = true;
 
-                Ped pilot = await World.CreatePed(PedHash.Blackops01SMY, spawnPos);
+                Ped pilot = await EntityUtil.CreatePed(PedHash.Blackops01SMY, PedType.PED_TYPE_MISSION, spawnPos);
                 pilot.IsInvincible = true;
                 pilot.RelationshipGroup = ArmyHeliSquadGroup;
                 pilot.SetIntoVehicle(heli, VehicleSeat.Driver);
@@ -105,7 +105,7 @@ namespace CorruptSnail.Spawners.Events
 
         private void HandleArmyHeliSquads()
         {
-            foreach (Ped ped in EntityEnum.GetPeds())
+            foreach (Ped ped in World.GetAllPeds())
                 if (ped.HasDecor(ARMYHELI_DECOR))
                     ped.RelationshipGroup.SetRelationshipBetweenGroups(Game.PlayerPed.RelationshipGroup, Relationship.Like, true);
         }

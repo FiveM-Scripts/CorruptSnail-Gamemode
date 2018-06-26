@@ -37,8 +37,7 @@ namespace CorruptSnail.Spawners
 
             if (!Utils.IsPosShitSpawn(Players, spawnPos, SpawnerHost.SPAWN_MIN_DISTANCE))
             {
-                Vehicle veh = await World
-                    .CreateVehicle(VEH_LIST[Utils.GetRandomInt(VEH_LIST.Length)], spawnPos);
+                Vehicle veh = await EntityUtil.CreateVehicle(VEH_LIST[Utils.GetRandomInt(VEH_LIST.Length)], spawnPos);
                 veh.Health = Utils.GetRandomInt(1000);
                 veh.EngineHealth = Utils.GetRandomInt(1000);
                 veh.PetrolTankHealth = Utils.GetRandomInt(1000);
