@@ -53,7 +53,7 @@ end
 Citizen.CreateThread(function()
     while true do
         Wait(Config.Spawning.TICK_RATE)
-        if GetIsLoadingScreenActive() then
+        if not GetIsLoadingScreenActive() then
             local zombies = _GetZombiePeds()
 
             if Player.IsHost() and #zombies < Config.Spawning.Zombies.MAX_AMOUNT then
