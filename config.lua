@@ -14,7 +14,7 @@ Config.Spawning = {
 
 Config.Spawning.Zombies = {
     -- Max amount of spawned zombies at once
-    MAX_AMOUNT = 30,
+    MAX_AMOUNT = 100,
     -- Chance a zombie receives special attributes (0 - 100)
     ATTR_CHANCE = 50,
     -- Max Health
@@ -24,7 +24,7 @@ Config.Spawning.Zombies = {
     -- Min spawn distance
     MIN_SPAWN_DISTANCE = 50,
     -- Despawn distance (should always be at least 2x min spawn distance)
-    DESPAWN_DISTANCE = 200,
+    DESPAWN_DISTANCE = 500,
     -- Model of zombies
     -- TODO: List of models
     ZOMBIE_MODEL = "u_m_y_zombie_01"
