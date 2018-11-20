@@ -40,23 +40,21 @@ local function _ZombifyPed(ped)
     end
 end
 
-local function _GetZombiePeds()
-    local zombies = {}
-    for ped in EntityEnum.EnumeratePeds() do
-        if DecorExistOn(ped, _DECOR) then
-            table.insert(zombies, ped)
-        end
-    end
-    return zombies
-end
-
 Citizen.CreateThread(function()
     while true do
         Wait(Config.Spawning.TICK_RATE)
         if NetworkIsSessionActive() then
-            local zombies = _GetZombiePeds()
+            local peds = {}
+            local zombieAmount = 0
+            for ped in EntityEnum.EnumeratePeds() do
+                local isZombie = DecorExistOn(ped, _DECOR)
+                if isZombie then
+                    zombieAmount = zombieAmount + 1
+                end
+                table.insert(peds, {handle = ped, isZombie = isZombie, relationshipGroup = GetPedRelationshipGroupHash(ped)})
+            end
 
-            if Player.IsHost() and #zombies < Config.Spawning.Zombies.MAX_AMOUNT then
+            if Player.IsHost() and zombieAmount < Config.Spawning.Zombies.MAX_AMOUNT then
                 local spawnPos = Utils.FindGoodSpawnPos(Config.Spawning.Zombies.MIN_SPAWN_DISTANCE + 0.0)
                 if spawnPos then
                     local newZ = Utils.ZToGround(spawnPos)
@@ -68,14 +66,19 @@ Citizen.CreateThread(function()
                 end
             end
     
-            for _, zombie in ipairs(zombies) do
-                SetRelationshipBetweenGroups(5, GetPedRelationshipGroupHash(zombie), GetPedRelationshipGroupHash(PlayerPedId()))
-                SetAmbientVoiceName(zombie, "ALIENS")
-                DisablePedPainAudio(zombie, true)
-                RequestAnimSet("move_m@drunk@verydrunk")
-                SetPedMovementClipset(zombie, "move_m@drunk@verydrunk", 1.0)
-                if IsPedDeadOrDying(zombie) or not Utils.IsPosNearAPlayer(GetEntityCoords(zombie), Config.Spawning.Zombies.DESPAWN_DISTANCE) then
-                    DeletePed(zombie)
+            for _, ped in ipairs(peds) do
+                if ped.isZombie then
+                    for _, ped2 in ipairs(peds) do
+                        SetRelationshipBetweenGroups(ped2.isZombie and 0 or 5, ped.relationshipGroup, ped2.relationshipGroup)
+                        SetRelationshipBetweenGroups(ped2.isZombie and 0 or 5, ped2.relationshipGroup, ped.relationshipGroup)
+                    end
+                    SetAmbientVoiceName(ped.Handle, "ALIENS")
+                    DisablePedPainAudio(ped.Handle, true)
+                    RequestAnimSet("move_m@drunk@verydrunk")
+                    SetPedMovementClipset(ped.Handle, "move_m@drunk@verydrunk", 1.0)
+                    if IsPedDeadOrDying(ped.Handle) or not Utils.IsPosNearAPlayer(GetEntityCoords(ped.Handle), Config.Spawning.Zombies.DESPAWN_DISTANCE) then
+                        DeletePed(ped.Handle)
+                    end
                 end
             end
         end

@@ -9,7 +9,7 @@ Config = {
 
 Config.Spawning = {
     -- Time between spawning ticks (in ms)
-    TICK_RATE = 100
+    TICK_RATE = 500
 }
 
 Config.Spawning.Zombies = {
