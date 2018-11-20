@@ -72,12 +72,12 @@ Citizen.CreateThread(function()
                         SetRelationshipBetweenGroups(ped2.isZombie and 0 or 5, ped.relationshipGroup, ped2.relationshipGroup)
                         SetRelationshipBetweenGroups(ped2.isZombie and 0 or 5, ped2.relationshipGroup, ped.relationshipGroup)
                     end
-                    SetAmbientVoiceName(ped.Handle, "ALIENS")
-                    DisablePedPainAudio(ped.Handle, true)
+                    SetAmbientVoiceName(ped.handle, "ALIENS")
+                    DisablePedPainAudio(ped.handle, true)
                     RequestAnimSet("move_m@drunk@verydrunk")
-                    SetPedMovementClipset(ped.Handle, "move_m@drunk@verydrunk", 1.0)
-                    if IsPedDeadOrDying(ped.Handle) or not Utils.IsPosNearAPlayer(GetEntityCoords(ped.Handle), Config.Spawning.Zombies.DESPAWN_DISTANCE) then
-                        DeletePed(ped.Handle)
+                    SetPedMovementClipset(ped.handle, "move_m@drunk@verydrunk", 1.0)
+                    if IsPedDeadOrDying(ped.handle) or not Utils.IsPosNearAPlayer(GetEntityCoords(ped.handle), Config.Spawning.Zombies.DESPAWN_DISTANCE) then
+                        DeletePed(ped.handle)
                     end
                 end
             end
