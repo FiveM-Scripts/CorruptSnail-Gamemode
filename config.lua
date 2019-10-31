@@ -24,9 +24,9 @@ Config.Spawning.Zombies = {
     -- Max Armor
     MAX_ARMOR = 500,
     -- Min spawn distance
-    MIN_SPAWN_DISTANCE = 50,
+    MIN_SPAWN_DISTANCE = 50.0,
     -- Despawn distance (should always be at least 2x min spawn distance)
-    DESPAWN_DISTANCE = 500,
+    DESPAWN_DISTANCE = 500.0,
     -- Model of zombies
     -- TODO: List of models
     ZOMBIE_MODEL = "u_m_y_zombie_01"

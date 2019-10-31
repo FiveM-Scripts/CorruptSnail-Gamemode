@@ -67,16 +67,22 @@ function Utils.FindGoodSpawnPos(minDistance)
     local maxDistance = Config.Spawning.Zombies.DESPAWN_DISTANCE
     local newPos
 
+    local mPlayerPedId = PlayerPedId()
+
     while not goodSpawnFound do
         goodSpawnFound = true
-        newPos = Utils.GetRandomPosOffsetFromEntity(PlayerPedId(), minDistance, maxDistance)
-        for _, player in ipairs(Utils.GetAllPlayers()) do
-            if Utils.GetDistanceBetweenCoords(GetEntityCoords(GetPlayerPed(player)), newPos) < minDistance then
+
+        newPos = Utils.GetRandomPosOffsetFromEntity(mPlayerPedId, minDistance, maxDistance)
+
+        for _, playerId in ipairs(GetActivePlayers()) do
+            if Utils.GetDistanceBetweenCoords(GetEntityCoords(GetPlayerPed(playerId)), newPos) < minDistance then
                 goodSpawnFound = false
 
                 break
             end
         end
+
+        Wait(0)
     end
 
     return newPos
@@ -93,8 +99,8 @@ end
 function Utils.IsPosNearAPlayer(pos, maxDistance)
     local nearbyPlayer = false
 
-    for _, player in ipairs(Utils.GetAllPlayers()) do
-        if Utils.GetDistanceBetweenCoords(GetEntityCoords(GetPlayerPed(player)), pos) < maxDistance then
+    for _, playerId in ipairs(GetActivePlayers()) do
+        if Utils.GetDistanceBetweenCoords(GetEntityCoords(GetPlayerPed(playerId)), pos) < maxDistance then
             nearbyPlayer = true
 
             break
@@ -104,18 +110,6 @@ function Utils.IsPosNearAPlayer(pos, maxDistance)
     return nearbyPlayer
 end
 
-function Utils.GetAllPlayers()
-    local players = {}
-
-    for i=0, GetNumberOfPlayers() - 1 do
-        if NetworkIsPlayerActive(i) then
-            table.insert(players, i)
-        end
-    end
-    
-    return players
-end
-
 function Utils.GetRandomPlayer()
-    return math.random(GetNumberOfPlayers() - 1)
+    return math.random(#GetActivePlayers())
 end

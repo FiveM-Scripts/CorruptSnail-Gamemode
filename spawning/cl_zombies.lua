@@ -1,5 +1,5 @@
 local DECOR = "_ARRRGHHHH!!!!"
-DecorRegister(_DECOR, 2)
+DecorRegister(DECOR, 2)
 
 local ZOMBIE_MODEL = GetHashKey(Config.Spawning.Zombies.ZOMBIE_MODEL)
 
@@ -64,7 +64,7 @@ local function FetchPeds()
 end
 
 local function SpawnRandomZombieIfPossible()
-    local spawnPos = Utils.FindGoodSpawnPos(Config.Spawning.Zombies.MIN_SPAWN_DISTANCE + 0.0)
+    local spawnPos = Utils.FindGoodSpawnPos(Config.Spawning.Zombies.MIN_SPAWN_DISTANCE)
 
     if spawnPos then
         local newZ = Utils.ZToGround(spawnPos)
