@@ -1,5 +1,5 @@
-local DECOR = "_ARRRGHHHH!!!!"
-DecorRegister(DECOR, 2)
+local ZOMBIE_DECOR = "_ZOMBIE"
+DecorRegister(ZOMBIE_DECOR, 2)
 
 local ZOMBIE_MODEL = GetHashKey(Config.Spawning.Zombies.ZOMBIE_MODEL)
 
@@ -22,10 +22,11 @@ local function ZombifyPed(ped)
     SetAiMeleeWeaponDamageModifier(9999.0)
     SetPedRagdollBlockingFlags(ped, 4)
     SetPedCanPlayAmbientAnims(ped, false)
+    SetPedKeepTask(ped, true)
     TaskWanderStandard(ped, 10.0, 10)
 
-    SetEntityHealth(ped, math.random(1, Config.Spawning.Zombies.MAX_HEALTH))
-    SetPedArmour(ped, math.random(1, Config.Spawning.Zombies.MAX_ARMOR))
+    SetEntityHealth(ped, math.random(200, Config.Spawning.Zombies.MAX_HEALTH))
+    SetPedArmour(ped, math.random(200, Config.Spawning.Zombies.MAX_ARMOR))
     
     if AttrRollTheDice() then
         SetPedRagdollOnCollision(ped, true)
@@ -48,8 +49,9 @@ local function FetchPeds()
     local peds = {}
     local zombieAmount = 0
 
+    local amount = 10
     for ped in EntityEnum.EnumeratePeds() do
-        local isZombie = DecorExistOn(ped, DECOR)
+        local isZombie = DecorExistOn(ped, ZOMBIE_DECOR)
 
         if isZombie then
             zombieAmount = zombieAmount + 1
@@ -57,7 +59,11 @@ local function FetchPeds()
 
         table.insert(peds, {Handle = ped, IsZombie = isZombie, RelationshipGroup = GetPedRelationshipGroupHash(ped)})
 
-        Wait(0)
+        amount = amount - 1
+        if amount < 0 then
+            amount = 10
+            Wait(50)
+        end
     end
 
     return peds, zombieAmount
@@ -69,22 +75,28 @@ local function SpawnRandomZombieIfPossible()
     if spawnPos then
         local newZ = Utils.ZToGround(spawnPos)
 
-        if newZ then
-            local zombie = Utils.CreatePed(ZOMBIE_MODEL, 25, vector3(spawnPos.x, spawnPos.y, newZ), 0.0)
-            ZombifyPed(zombie)
-
-            DecorSetBool(zombie, DECOR, true)
+        if not newZ then
+            newZ = spawnPos.z - 1000.0
         end
+
+        local zombie = Utils.CreatePed(ZOMBIE_MODEL, 25, vector3(spawnPos.x, spawnPos.y, newZ), 0.0)
+        ZombifyPed(zombie)
+
+        DecorSetBool(zombie, ZOMBIE_DECOR, true)
     end
 end
 
 local function HandleExistingZombies(peds)
+    local mPlayerPed = PlayerPedId()
+    local mPlayerPedPos = GetEntityCoords(mPlayerPed)
+
     for _, ped in ipairs(peds) do
         if ped.IsZombie then
             local handle = ped.Handle
+            local zombieCoords = GetEntityCoords(handle)
 
-            if IsPedDeadOrDying(handle) or not Utils.IsPosNearAPlayer(GetEntityCoords(handle), Config.Spawning.Zombies.DESPAWN_DISTANCE) then
-                DeletePed(handle)
+            if IsPedDeadOrDying(handle) or not Utils.IsPosNearAPlayer(zombieCoords, Config.Spawning.Zombies.DESPAWN_DISTANCE) then
+                SetPedAsNoLongerNeeded(handle)
             else
                 local relaionshipGroup = ped.RelationshipGroup
 
@@ -102,25 +114,31 @@ local function HandleExistingZombies(peds)
 
                 RequestAnimSet("move_m@drunk@verydrunk")
                 SetPedMovementClipset(handle, "move_m@drunk@verydrunk", 1.0)
-            end
 
-            Wait(0)
+                if IsPedInCombat(handle, mPlayerPed) and Utils.GetDistanceBetweenCoords(mPlayerPedPos, zombieCoords) > 2.0 then
+                    TaskGoToEntity(handle, mPlayerPed, -1, 1.0, math.random(1, 2) + 0.0)
+                end
+            end
         end
     end
 end
 
 Citizen.CreateThread(function()
+    while not NetworkIsSessionActive() do
+        Wait(100)
+    end
+
     while true do
-        Wait(Config.Spawning.TICK_RATE)
+        Wait(Config.Spawning.TICK_RATE / 2)
 
-        if NetworkIsSessionActive() then
-            local peds, zombieAmount = FetchPeds()
+        local peds, zombieAmount = FetchPeds()
 
-            if Player.IsSpawnHost() and zombieAmount < Config.Spawning.Zombies.MAX_AMOUNT then
-                SpawnRandomZombieIfPossible()
-            end
-    
-            HandleExistingZombies(peds)
+        if Player.IsSpawnHost() and zombieAmount <= Config.Spawning.Zombies.MAX_AMOUNT then
+            SpawnRandomZombieIfPossible()
         end
+
+        Wait(Config.Spawning.TICK_RATE / 2)
+
+        HandleExistingZombies(peds)
     end
 end)

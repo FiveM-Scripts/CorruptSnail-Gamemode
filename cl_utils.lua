@@ -1,6 +1,6 @@
 Utils = {}
 
-local function _WaitForModel(model)
+local function WaitForModel(model)
     if IsModelValid(model) then
         RequestModel(model)
 
@@ -12,7 +12,7 @@ end
 
 function Utils.CreatePed(model, pedType, pos, heading)
     if IsModelAPed(model) then
-        _WaitForModel(model)
+        WaitForModel(model)
 
         local ped = CreatePed(pedType, model, pos.x, pos.y, pos.z, heading, true)
 
@@ -24,7 +24,7 @@ end
 
 function Utils.CreateVehicle(model, pos, heading)
     if IsModelAVehicle(model) then
-        _WaitForModel(model)
+        WaitForModel(model)
 
         local veh = CreateVehicle(model, table.unpack(pos), heading, true)
 
@@ -36,7 +36,7 @@ end
 
 function Utils.CreateProp(model, pos, dynamic, placeOnGround)
     if IsModelValid(model) then
-        _WaitForModel(model)
+        WaitForModel(model)
 
         local x, y, z = table.unpack(pos)
         local prop = CreateObject(model, x, y, GetGroundZFor_3dCoord(x, y, z), true, false, dynamic)
@@ -52,14 +52,12 @@ function Utils.GetDistanceBetweenCoords(pos1, pos2)
 end
 
 function Utils.GetRandomPosOffsetFromEntity(entity, minDistance, maxDistance)
-    local coord1 = (math.random(0, 1) == 0 and math.random(minDistance, maxDistance / 2) or math.random(-maxDistance / 2, -minDistance)) + 0.0
-    local coord2 = math.random(-maxDistance, maxDistance) + 0.0
+    local angle = math.random() * math.pi * 2
+    local r = math.sqrt(math.random()) * maxDistance
+    local x = r * math.cos(angle)
+    local y = r * math.sin(angle)
 
-    if math.random(0, 1) == 1 then
-        return GetOffsetFromEntityInWorldCoords(entity, coord1, coord2, 0.0)
-    else
-        return GetOffsetFromEntityInWorldCoords(entity, coord2, coord1, 0.0)
-    end
+    return GetOffsetFromEntityInWorldCoords(entity, x, y, 0.0)
 end
 
 function Utils.FindGoodSpawnPos(minDistance)
@@ -69,20 +67,29 @@ function Utils.FindGoodSpawnPos(minDistance)
 
     local mPlayerPedId = PlayerPedId()
 
+    local tries = 5
     while not goodSpawnFound do
         goodSpawnFound = true
 
         newPos = Utils.GetRandomPosOffsetFromEntity(mPlayerPedId, minDistance, maxDistance)
 
-        for _, playerId in ipairs(GetActivePlayers()) do
-            if Utils.GetDistanceBetweenCoords(GetEntityCoords(GetPlayerPed(playerId)), newPos) < minDistance then
-                goodSpawnFound = false
+        if not newPos then
+            goodSpawnFound = false
+            tries = tries - 1
+        else
+            for _, playerId in ipairs(GetActivePlayers()) do
+                if Utils.GetDistanceBetweenCoords(GetEntityCoords(GetPlayerPed(playerId)), newPos) < minDistance then
+                    goodSpawnFound = false
+                    tries = tries - 1
 
-                break
+                    break
+                end
             end
         end
 
-        Wait(0)
+        if tries == 0 then
+            return nil
+        end
     end
 
     return newPos
