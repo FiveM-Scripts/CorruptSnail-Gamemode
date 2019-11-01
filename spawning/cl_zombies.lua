@@ -30,6 +30,8 @@ local function ZombifyPed(ped)
     SetPedHearingRange(ped, 9999.0)
     SetPedSeeingRange(ped, 50.0)
 
+    SetPedConfigFlag(ped, 224, true)
+    SetPedConfigFlag(ped, 281, true)
     SetPedCombatAttributes(ped, 46, true)
     SetPedCombatAttributes(ped, 5, true)
     SetPedCombatAttributes(ped, 1, false)
