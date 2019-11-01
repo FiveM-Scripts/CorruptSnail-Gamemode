@@ -11,7 +11,7 @@ Config.Spawning = {
     -- Time between each "tick" for operations (in ms)
     TICK_RATE = 500,
     -- Min distance between players to decide one "host"
-    HOST_DECIDE_DIST = 100
+    HOST_DECIDE_DIST = 100.0
 }
 
 Config.Spawning.Zombies = {
