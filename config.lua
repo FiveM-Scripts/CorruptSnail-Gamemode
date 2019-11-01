@@ -20,7 +20,7 @@ Config.Spawning.Zombies = {
     -- Chance a zombie receives a special attributes (per attribute, 0 - 100)
     ATTR_CHANCE = 25,
     -- Max Health
-    MAX_HEALTH = 200,
+    MAX_HEALTH = 300,
     -- Max Armor
     MAX_ARMOR = 200,
     -- Min spawn distance

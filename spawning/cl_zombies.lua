@@ -48,7 +48,7 @@ local function ZombifyPed(ped)
     TaskWanderStandard(ped, 10.0, 10)
 
     SetEntityHealth(ped, math.random(200, Config.Spawning.Zombies.MAX_HEALTH))
-    SetPedArmour(ped, math.random(200, Config.Spawning.Zombies.MAX_ARMOR))
+    SetPedArmour(ped, math.random(0, Config.Spawning.Zombies.MAX_ARMOR))
     
     if AttrRollTheDice() then
         SetPedRagdollOnCollision(ped, true)
