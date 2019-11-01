@@ -38,6 +38,8 @@ local function ZombifyPed(ped)
     SetPedCombatRange(ped, 2)
     SetPedCombatMovement(ped, 3)
 
+    SetPedSuffersCriticalHits(ped, false)
+
     SetAiMeleeWeaponDamageModifier(9999.0)
     SetPedRagdollBlockingFlags(ped, 4)
     SetPedCanRagdollFromPlayerImpact(handle, false)
@@ -56,13 +58,9 @@ local function ZombifyPed(ped)
         SetPedHelmet(ped, true)
     end
 
-    if AttrRollTheDice() then
+    --[[if AttrRollTheDice() then
         SetPedRagdollBlockingFlags(ped, 1)
-    end
-
-    if AttrRollTheDice() then
-        SetPedSuffersCriticalHits(ped, false)
-    end
+    end]]--
 end
 
 local function FetchPeds()
