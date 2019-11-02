@@ -71,16 +71,14 @@ local function FetchPeds()
     for ped in EntityEnum.EnumeratePeds() do
         local relationshipGroup = GetPedRelationshipGroupHash(ped)
         local isZombie = relationshipGroup == ZOMBIE_GROUP
-        local isInCombat = false
+        local combatTarget
 
         if isZombie then
             zombieAmount = zombieAmount + 1
 
-            for playerId in ipairs(GetActivePlayers()) do
-                local playerPedId = GetPlayerPed(playerId)
-
-                if IsPedInCombat(handle, playerPedId) then
-                    isInCombat = true
+            for ped2 in EntityEnum.EnumeratePeds() do
+                if IsPedInCombat(ped, ped2) then
+                    combatTarget = ped2
 
                     break
                 end
@@ -88,11 +86,12 @@ local function FetchPeds()
         end
 
         table.insert(peds, {Handle = ped, IsZombie = isZombie, RelationshipGroup = relationshipGroup,
-            ZombieIsInCombat = isInCombat})
+            ZombieCombatTarget = combatTarget})
 
         untilPause = untilPause - 1
         if untilPause < 0 then
             untilPause = 10
+
             Wait(50)
         end
     end
@@ -122,9 +121,9 @@ end
 
 local function HandleExistingZombies()
     local mPlayerPed = PlayerPedId()
-    local mPlayerPedPos = GetEntityCoords(mPlayerPed)
     local currentCloudTime = GetCloudTimeAsInt()
 
+    local untilPause = 5
     for _, ped in ipairs(m_peds) do
         if ped.IsZombie then
             local handle = ped.Handle
@@ -134,6 +133,8 @@ local function HandleExistingZombies()
                 SetPedAsNoLongerNeeded(handle)
             else
                 local relationshipGroup = ped.RelationshipGroup
+                local zombieGameTarget = ped.ZombieCombatTarget
+                local zombieCombatTimeout = DecorGetInt(handle, ZOMBIE_IGNORE_COMBAT_TIMEOUT_DECOR)
 
                 for _, ped2 in ipairs(m_peds) do
                     if not ped2.IsZombie and IsPedAPlayer(ped2.Handle) then
@@ -151,34 +152,36 @@ local function HandleExistingZombies()
                 RequestAnimSet("move_m@drunk@verydrunk")
                 SetPedMovementClipset(handle, "move_m@drunk@verydrunk", 0.5)
 
-                if Utils.GetDistanceBetweenCoords(mPlayerPedPos, zombieCoords) > 1.0 then
-                    local zombieCombatTimeout = DecorGetInt(handle, ZOMBIE_IGNORE_COMBAT_TIMEOUT_DECOR)
+                SetBlockingOfNonTemporaryEvents(handle, zombieCombatTimeout > currentCloudTime)
 
-                    if zombieCombatTimeout <= currentCloudTime then
-                        SetBlockingOfNonTemporaryEvents(handle, false)
+                if zombieGameTarget and Utils.GetDistanceBetweenCoords(GetEntityCoords(zombieGameTarget), zombieCoords) > 1.0 then
+                    DecorSetInt(handle, ZOMBIE_IGNORE_COMBAT_TIMEOUT_DECOR, currentCloudTime + 20)
+                    DecorSetInt(handle, ZOMBIE_TARGET_DECOR, zombieGameTarget)
+                else
+                    local zombieDecorTarget = DecorGetInt(handle, ZOMBIE_TARGET_DECOR)
 
-                        if IsPedInCombat(handle, mPlayerPed) then
-                            DecorSetInt(handle, ZOMBIE_IGNORE_COMBAT_TIMEOUT_DECOR, currentCloudTime + 10)
-                            DecorSetInt(handle, ZOMBIE_TARGET_DECOR, mPlayerPed)
+                    if zombieDecorTarget ~= 0 and Utils.GetDistanceBetweenCoords(GetEntityCoords(zombieDecorTarget), zombieCoords) > 1.0 then
+                        if DecorGetInt(handle, ZOMBIE_UPDATE_TASK_TIMEOUT_DECOR) <= currentCloudTime then
+                            TaskGoToEntity(handle, zombieDecorTarget, -1, 1.0, 1.0)
+
+                            DecorSetInt(handle, ZOMBIE_UPDATE_TASK_TIMEOUT_DECOR, currentCloudTime + 5)
                         end
                     else
-                        SetBlockingOfNonTemporaryEvents(handle, true)
-
-                        if DecorGetInt(handle, ZOMBIE_TARGET_DECOR) == mPlayerPed
-                            and DecorGetInt(handle, ZOMBIE_UPDATE_TASK_TIMEOUT_DECOR) <= currentCloudTime then
-
-                            TaskGoToEntity(handle, mPlayerPed, -1, 1.0, 1.0)
-                            TaskGoStraightToCoord(handle, table.unpack(mPlayerPedPos), math.random(1, 2) + 0.0, -1, 0.0, 0.0)
-
-                            DecorSetInt(handle, ZOMBIE_UPDATE_TASK_TIMEOUT_DECOR, currentCloudTime + 3)
+                        if zombieGameTarget and not IsPedInCombat(handle, zombieGameTarget) then
+                            TaskCombatPed(handle, zombieGameTarget, 0, 16)
+                        elseif zombieDecorTarget ~= 0 and not IsPedInCombat(handle, zombieDecorTarget) then
+                            TaskCombatPed(handle, zombieDecorTarget, 0, 16)
                         end
-                    end
-                else
-                    if not ped.ZombieIsInCombat then
-                        TaskCombatPed(handle, mPlayerPed, 0, 16)
                     end
                 end
             end
+        end
+
+        untilPause = untilPause - 1
+        if untilPause == 0 then
+            untilPause = 5
+
+            Wait(0)
         end
     end
 end
