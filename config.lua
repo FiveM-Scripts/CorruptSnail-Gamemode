@@ -21,7 +21,11 @@ Config.Spawning = {
         {x= -2328.2419, y= 3245.5944, z= 33.0539665}
     },
     -- Set this to true or false to switch between MP or SP skins.
-    MULTIPLAYER_MODEL = false
+    MULTIPLAYER_MODEL = false,
+    -- Set the default weapons for each player
+    DEFAULT_WEAPONS = {
+        "WEAPON_PISTOL", "WEAPON_HAMMER"
+    }
 }
 
 Config.Spawning.Zombies = {

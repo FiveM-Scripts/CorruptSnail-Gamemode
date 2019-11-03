@@ -1,7 +1,10 @@
 Player = {}
 
 function Player.GetDetfaultWeapons()
-    GiveWeaponToPed(PlayerPedId(), "WEAPON_PISTOL", -1, false, true)
+    local playerPed = PlayerPedId()
+    for k, v in pairs(Config.Spawning.Player.WEAPONS) do
+        GiveWeaponToPed(playerPed, v, -1, false, true)
+    end
 end
 
 function Player.IsSpawnHost()
