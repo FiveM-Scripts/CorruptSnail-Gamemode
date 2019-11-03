@@ -25,6 +25,9 @@ DecorRegister(ZOMBIE_TARGET_DECOR, 3)
 local ZOMBIE_UPDATE_TASK_TIMEOUT_DECOR = "_ZOMBIE_UPDATE_TASK_TIMEOUT"
 DecorRegister(ZOMBIE_UPDATE_TASK_TIMEOUT_DECOR, 3)
 
+local ZOMBIE_TIME_UNTIL_SOUND_DECOR = "_ZOMBIE_SOUND_TIMEOUT"
+DecorRegister(ZOMBIE_TIME_UNTIL_SOUND_DECOR, 3)
+
 local ZOMBIE_MODEL = GetHashKey(Config.Spawning.Zombies.ZOMBIE_MODEL)
 
 local m_peds = {}
@@ -124,6 +127,7 @@ local function SpawnRandomZombieIfPossible()
         DecorSetInt(zombie, ZOMBIE_IGNORE_COMBAT_TIMEOUT_DECOR, 0)
         DecorSetInt(zombie, ZOMBIE_TARGET_DECOR, 0)
         DecorSetInt(zombie, ZOMBIE_UPDATE_TASK_TIMEOUT_DECOR, 0)
+        DecorSetInt(zombie, ZOMBIE_TIME_UNTIL_SOUND_DECOR, 0)
     end
 end
 
@@ -156,10 +160,18 @@ local function HandleExistingZombies()
                 SetAmbientVoiceName(handle, "ALIENS")
                 DisablePedPainAudio(handle, true)
 
-                RequestAnimSet("move_m@drunk@verydrunk")
+                if not HasAnimSetLoaded("move_m@drunk@verydrunk") then
+                    RequestAnimSet("move_m@drunk@verydrunk")
+                end
                 SetPedMovementClipset(handle, "move_m@drunk@verydrunk", 0.5)
 
                 SetBlockingOfNonTemporaryEvents(handle, zombieCombatTimeout > currentCloudTime)
+
+                if Config.Spawning.Zombies.ENABLE_SOUNDS and DecorGetInt(handle, ZOMBIE_TIME_UNTIL_SOUND_DECOR) <= currentCloudTime then
+                    DisablePedPainAudio(handle, false)
+                    --PlayPain(handle, 10)
+                    DecorSetInt(handle, ZOMBIE_TIME_UNTIL_SOUND_DECOR, currentCloudTime + math.random(3, 5))
+                end
 
                 if zombieGameTarget and Utils.GetDistanceBetweenCoords(GetEntityCoords(zombieGameTarget), zombieCoords) > 2.0 then
                     DecorSetInt(handle, ZOMBIE_IGNORE_COMBAT_TIMEOUT_DECOR, currentCloudTime + 10)
