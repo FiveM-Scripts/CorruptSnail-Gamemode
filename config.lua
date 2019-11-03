@@ -4,7 +4,7 @@ Config = {
     -- Hide Radar
     HIDE_RADAR = true,
     -- First person only
-    FIRST_PERSON_LOCK = true,
+    FIRST_PERSON_LOCK = false,
     -- Enable blackout
     ENABLE_BLACKOUT = false
 }
@@ -37,7 +37,11 @@ Config.Spawning = {
         {x = 1968.7, y = 5178.15, z = 47.85}
     },
     -- Set this to true or false to switch between MP or SP skins.
-    MULTIPLAYER_MODEL = false,
+    MULTIPLAYER_MODEL = true,
+    -- Set the single player models that players can spawn with.
+    SP_MODELS = {
+        "a_m_y_vinewood_01", "a_m_m_bevhills_02", "a_m_m_mexlabor_01", "g_m_y_strpunk_02", "a_m_y_genstreet_01"
+    },
     -- Set the default weapons for each player
     DEFAULT_WEAPONS = {
         "WEAPON_PISTOL", "WEAPON_HAMMER"

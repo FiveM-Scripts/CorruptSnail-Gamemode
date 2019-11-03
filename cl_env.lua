@@ -16,8 +16,11 @@ Citizen.CreateThread(function()
         Wait(0)
 
         local playerId = PlayerId()
-
+        
         HideHudComponentThisFrame(1)
+        HideHudComponentThisFrame(3)
+        HideHudComponentThisFrame(4)
+        HideHudComponentThisFrame(13)
         
         SetVehicleDensityMultiplierThisFrame(0.0)
         SetParkedVehicleDensityMultiplierThisFrame(0.0)
