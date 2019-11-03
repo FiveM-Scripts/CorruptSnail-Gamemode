@@ -53,7 +53,7 @@ function Spawn.GetRandomMultiPlayerModel()
     SetPedComponentVariation(playerPed, 11, 0, math.random(0, 5), 0)            
 end
 
-<<<<<<< HEAD
+
 function SendNotification(icon, type, sender, title, text)
     SetNotificationTextEntry("STRING")
     AddTextComponentString(text)
@@ -62,10 +62,7 @@ function SendNotification(icon, type, sender, title, text)
     DrawNotification(true, true)
 end
 
-AddEventHandler('onClientGameTypeStart', function()
-=======
 AddEventHandler("onClientGameTypeStart", function()
->>>>>>> e33dfe82e7bb925308174467eaaa34a5ce0337a6
     exports.spawnmanager:setAutoSpawnCallback(function()
         spawnPos = Spawn.GetRandomSafeZoneCoords()
         if Config.Spawning.MULTIPLAYER_MODEL then
