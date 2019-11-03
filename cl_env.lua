@@ -14,6 +14,9 @@ Citizen.CreateThread(function()
 
     while true do
         Wait(0)
+
+        local playerId = PlayerId()
+
         HideHudComponentThisFrame(1)
         
         SetVehicleDensityMultiplierThisFrame(0.0)
@@ -23,8 +26,8 @@ Citizen.CreateThread(function()
         SetPedDensityMultiplierThisFrame(0.0)
         SetScenarioPedDensityMultiplierThisFrame(0.0, 0.0)
         
-        if IsPlayerWantedLevelGreater(PlayerId(), 0) then
-            ClearPlayerWantedLevel(PlayerId())
+        if IsPlayerWantedLevelGreater(playerId, 0) then
+            ClearPlayerWantedLevel(playerId)
         end        
 
         if Config.FIRST_PERSON_LOCK then
