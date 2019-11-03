@@ -7,7 +7,7 @@ This mod is still in an early WIP phase.
 
 ## Installation
 - Download the resource.
-- Extract the zipfile and copy all files to `resources/corruptsnail/`.
+- Extract the zipfile and copy all files to **resources/corruptsnail**.
 - Open **server.cfg** and add `ensure corruptsnail`.
 
 **TODO:**
