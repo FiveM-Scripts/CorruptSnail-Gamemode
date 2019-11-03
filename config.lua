@@ -21,7 +21,7 @@ Config.Spawning = {
         {x= -2328.2419, y= 3245.5944, z= 33.0539665}
     },
     -- Set this to true or false to switch between MP or SP skins.
-    MULTIPLAYER_MODEL = false,
+    MULTIPLAYER_MODEL = true,
     -- Set the single player models that players can spawn with.
     SP_MODELS = {
         "a_m_y_vinewood_01", "a_m_m_bevhills_02", "a_m_m_mexlabor_01", "g_m_y_strpunk_02", "a_m_y_genstreet_01"
