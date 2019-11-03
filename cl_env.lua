@@ -1,6 +1,5 @@
 Citizen.CreateThread(function()
     DisplayRadar(not Config.HIDE_RADAR)
-
     SetBlackout(Config.ENABLE_BLACKOUT)
 
     if Config.FIRST_PERSON_LOCK then
@@ -12,11 +11,13 @@ Citizen.CreateThread(function()
         EnableDispatchService(i, false)
     end
 
+    Utils.AddSafeZoneBlips()
+    
     while true do
         Wait(0)
 
         local playerId = PlayerId()
-        
+
         HideHudComponentThisFrame(1)
         HideHudComponentThisFrame(3)
         HideHudComponentThisFrame(4)
