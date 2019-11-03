@@ -1,16 +1,25 @@
 local Spawn = {}
 
+function Spawn.GetDetfaultWeapons()
+    local playerPed = PlayerPedId()
+    for k, v in pairs(Config.Spawning.DEFAULT_WEAPONS) do
+        GiveWeaponToPed(playerPed, v, -1, false, true)
+    end
+
+    SetCurrentPedWeapon(playerPed, "WEAPON_UNARMED", true)
+end
+
 function Spawn.GetRandomSafeZoneCoords()    
     local keys = {}
 
-    for key, value in pairs(Config.Spawning.Player.SPAWN_POINTS) do
+    for key, value in pairs(Config.Spawning.SPAWN_POINTS) do
         keys[#keys+1] = key
     end
 
     math.randomseed(GetGameTimer())
     index = keys[math.random(1, #keys)]
 
-    return Config.Spawning.Player.SPAWN_POINTS[index]
+    return Config.Spawning.SPAWN_POINTS[index]
 end
 
 
@@ -24,7 +33,7 @@ AddEventHandler('onClientGameTypeStart', function()
             z = spawnPos.z,
             model = 'a_m_m_skater_01'
         }, function()
-            Player.GetDetfaultWeapons()
+            Spawn.GetDetfaultWeapons()
         end)
     end)
 
