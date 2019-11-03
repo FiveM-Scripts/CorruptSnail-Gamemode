@@ -169,11 +169,12 @@ local function HandleExistingZombies()
 
                 if Config.Spawning.Zombies.ENABLE_SOUNDS and DecorGetInt(handle, ZOMBIE_TIME_UNTIL_SOUND_DECOR) <= currentCloudTime then
                     DisablePedPainAudio(handle, false)
-                    --PlayPain(handle, 10)
+                    --PlayPain(handle, 16)
                     DecorSetInt(handle, ZOMBIE_TIME_UNTIL_SOUND_DECOR, currentCloudTime + math.random(3, 5))
                 end
 
-                if zombieGameTarget and Utils.GetDistanceBetweenCoords(GetEntityCoords(zombieGameTarget), zombieCoords) > 2.0 then
+                if zombieGameTarget and zombieCombatTimeout <= currentCloudTime
+                    and Utils.GetDistanceBetweenCoords(GetEntityCoords(zombieGameTarget), zombieCoords) > 2.0 then
                     DecorSetInt(handle, ZOMBIE_IGNORE_COMBAT_TIMEOUT_DECOR, currentCloudTime + 10)
                     DecorSetInt(handle, ZOMBIE_TARGET_DECOR, zombieGameTarget)
                 else
