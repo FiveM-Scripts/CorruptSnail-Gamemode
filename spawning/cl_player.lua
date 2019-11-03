@@ -22,6 +22,19 @@ function Spawn.GetRandomSafeZoneCoords()
     return Config.Spawning.SPAWN_POINTS[index]
 end
 
+function Spawn.GetRandomSinglePlayer()
+    local keys = {}
+
+    for key, value in pairs(Config.Spawning.SP_MODELS) do
+        keys[#keys+1] = key
+    end
+
+    math.randomseed(GetGameTimer())
+    index = keys[math.random(1, #keys)]
+
+    return Config.Spawning.SP_MODELS[index]
+end
+
 
 AddEventHandler('onClientGameTypeStart', function()
     exports.spawnmanager:setAutoSpawnCallback(function()
@@ -31,7 +44,7 @@ AddEventHandler('onClientGameTypeStart', function()
             x = spawnPos.x,
             y = spawnPos.y,
             z = spawnPos.z,
-            model = 'a_m_m_skater_01'
+            model = Spawn.GetRandomSinglePlayer()
         }, function()
             Spawn.GetDetfaultWeapons()
         end)
