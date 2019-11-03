@@ -53,6 +53,14 @@ function Spawn.GetRandomMultiPlayerModel()
     SetPedComponentVariation(playerPed, 11, 0, math.random(0, 5), 0)            
 end
 
+function SendNotification(icon, type, sender, title, text)
+    SetNotificationTextEntry("STRING")
+    AddTextComponentString(text)
+    SetNotificationMessage(icon, icon, true, type, sender, title, text)
+    PlaySoundFrontend(-1, "Event_Message_Purple", "GTAO_FM_Events_Soundset", true)
+    DrawNotification(true, true)
+end
+
 AddEventHandler('onClientGameTypeStart', function()
     exports.spawnmanager:setAutoSpawnCallback(function()
         spawnPos = Spawn.GetRandomSafeZoneCoords()
@@ -80,4 +88,7 @@ AddEventHandler('onClientGameTypeStart', function()
 
     exports.spawnmanager:setAutoSpawn(true)
     exports.spawnmanager:forceRespawn()
+
+    Wait(2000)
+    SendNotification("CHAR_LESTER_DEATHWISH", 1, "CorruptSnail", "", GetLabelText("collision_9a0v4k"))
 end)

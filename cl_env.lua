@@ -1,6 +1,8 @@
 Citizen.CreateThread(function()
     DisplayRadar(not Config.HIDE_RADAR)
     SetBlackout(Config.ENABLE_BLACKOUT)
+    SetAudioFlag("DisableFlightMusic", true)
+    SetAudioFlag("PoliceScannerDisabled", true)
 
     if Config.FIRST_PERSON_LOCK then
         SetFollowPedCamViewMode(4)
@@ -23,12 +25,16 @@ Citizen.CreateThread(function()
         HideHudComponentThisFrame(4)
         HideHudComponentThisFrame(13)
         
-        SetVehicleDensityMultiplierThisFrame(0.0)
-        SetParkedVehicleDensityMultiplierThisFrame(0.0)
-        SetRandomVehicleDensityMultiplierThisFrame(0.0)
+        if not Config.ENABLE_PEDS then
+            SetPedDensityMultiplierThisFrame(0.0)
+            SetScenarioPedDensityMultiplierThisFrame(0.0, 0.0)
+        end
 
-        SetPedDensityMultiplierThisFrame(0.0)
-        SetScenarioPedDensityMultiplierThisFrame(0.0, 0.0)
+        if not Config.ENABLE_TRAFFIC then
+            SetVehicleDensityMultiplierThisFrame(0.0)
+            SetParkedVehicleDensityMultiplierThisFrame(0.0)
+            SetRandomVehicleDensityMultiplierThisFrame(0.0)
+        end
         
         if IsPlayerWantedLevelGreater(playerId, 0) then
             ClearPlayerWantedLevel(playerId)

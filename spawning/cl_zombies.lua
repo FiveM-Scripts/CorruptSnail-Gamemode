@@ -1,10 +1,20 @@
 local PLAYER_GROUP = GetHashKey("PLAYER")
-
 local ZOMBIE_GROUP = GetHashKey("_ZOMBIE")
-AddRelationshipGroup("_ZOMBIE")
 
+AddRelationshipGroup("_ZOMBIE")
 SetRelationshipBetweenGroups(5, PLAYER_GROUP, ZOMBIE_GROUP)
 SetRelationshipBetweenGroups(5, ZOMBIE_GROUP, PLAYER_GROUP)
+
+Relationships = {"GANG_1", "GANG_2", "GANG_9", "AMBIENT_GANG_BALLAS", "AMBIENT_GANG_CULT", "AMBIENT_GANG_FAMILY", "AMBIENT_GANG_LOST", "CIVMALE", "CIVFEMALE"}
+if Config.ENABLE_PEDS then
+    for k,v in pairs(Relationships) do
+        SetRelationshipBetweenGroups(5, ZOMBIE_GROUP, GetHashKey(v))
+        SetRelationshipBetweenGroups(5, GetHashKey(v), ZOMBIE_GROUP)
+
+        SetRelationshipBetweenGroups(0, PLAYER_GROUP, GetHashKey(v))
+        SetRelationshipBetweenGroups(0, GetHashKey(v), PLAYER_GROUP)
+    end
+end
 
 local ZOMBIE_IGNORE_COMBAT_TIMEOUT_DECOR = "_ZOMBIE_IGNORE_COMBAT_TIMEOUT"
 DecorRegister(ZOMBIE_IGNORE_COMBAT_TIMEOUT_DECOR, 3)
@@ -41,7 +51,7 @@ local function ZombifyPed(ped)
 
     SetAiMeleeWeaponDamageModifier(9999.0)
     SetPedRagdollBlockingFlags(ped, 4)
-    SetPedCanRagdollFromPlayerImpact(handle, false)
+    SetPedCanRagdollFromPlayerImpact(ped, false)
     SetPedCanPlayAmbientAnims(ped, false)
     SetPedKeepTask(ped, true)
     TaskWanderStandard(ped, 10.0, 10)
@@ -56,7 +66,6 @@ local function ZombifyPed(ped)
     if AttrRollTheDice() then
         SetPedSuffersCriticalHits(ped, false)
     end
-
     --[[if AttrRollTheDice() then
         SetPedRagdollBlockingFlags(ped, 1)
     end]]--
@@ -145,7 +154,6 @@ local function HandleExistingZombies()
                 end
 
                 SetAmbientVoiceName(handle, "ALIENS")
-
                 DisablePedPainAudio(handle, true)
 
                 RequestAnimSet("move_m@drunk@verydrunk")

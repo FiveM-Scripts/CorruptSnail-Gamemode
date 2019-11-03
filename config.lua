@@ -6,7 +6,11 @@ Config = {
     -- First person only
     FIRST_PERSON_LOCK = false,
     -- Enable blackout
-    ENABLE_BLACKOUT = false
+    ENABLE_BLACKOUT = false,
+    -- Enable or disable AI peds.
+    ENABLE_PEDS = false,
+    -- Enable or disable AI traffic.
+    ENABLE_TRAFFIC = false,
 }
 
 Config.Spawning = {
