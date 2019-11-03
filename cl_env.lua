@@ -14,15 +14,18 @@ Citizen.CreateThread(function()
 
     while true do
         Wait(0)
-
+        HideHudComponentThisFrame(1)
+        
         SetVehicleDensityMultiplierThisFrame(0.0)
         SetParkedVehicleDensityMultiplierThisFrame(0.0)
         SetRandomVehicleDensityMultiplierThisFrame(0.0)
 
         SetPedDensityMultiplierThisFrame(0.0)
         SetScenarioPedDensityMultiplierThisFrame(0.0, 0.0)
-
-        SetMaxWantedLevel(0)
+        
+        if IsPlayerWantedLevelGreater(PlayerId(), 0) then
+            ClearPlayerWantedLevel(PlayerId())
+        end        
 
         if Config.FIRST_PERSON_LOCK then
             DisableControlAction(0, 0, true)
