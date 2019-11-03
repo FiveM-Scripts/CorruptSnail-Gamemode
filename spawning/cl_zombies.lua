@@ -148,7 +148,9 @@ local function HandleExistingZombies()
 
                 DisablePedPainAudio(handle, true)
 
-                RequestAnimSet("move_m@drunk@verydrunk")
+                if not HasAnimSetLoaded("move_m@drunk@verydrunk") then
+                    RequestAnimSet("move_m@drunk@verydrunk")
+                end
                 SetPedMovementClipset(handle, "move_m@drunk@verydrunk", 0.5)
 
                 SetBlockingOfNonTemporaryEvents(handle, zombieCombatTimeout > currentCloudTime)
