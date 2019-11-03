@@ -1,5 +1,9 @@
 Player = {}
 
+function Player.GetDetfaultWeapons()
+    GiveWeaponToPed(PlayerPedId(), "WEAPON_PISTOL", -1, false, true)
+end
+
 function Player.IsSpawnHost()
     local mPlayerId = PlayerId()
     local mServerId = GetPlayerServerId(playerId)

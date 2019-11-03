@@ -11,7 +11,15 @@ Config.Spawning = {
     -- Time between each "tick" for operations (in ms)
     TICK_RATE = 500,
     -- Min distance between players to decide one "host"
-    HOST_DECIDE_DIST = 200.0
+    HOST_DECIDE_DIST = 200.0,
+    -- Set the default spawnpoints when joining the server.
+    SPAWN_POINTS = {
+        {x= 428.1125, y= -981.19305, z= 30.71015},
+        {x= -2542.0256, y= 2341.4169, z= 33.059909},
+        {x= -2328.2419, y= 3245.5944, z= 33.0539665}
+    },
+    -- Set this to true or false to switch between MP or SP skins.
+    MULTIPLAYER_MODEL = false
 }
 
 Config.Spawning.Zombies = {
