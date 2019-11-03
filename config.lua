@@ -4,7 +4,9 @@ Config = {
     -- Hide Radar
     HIDE_RADAR = true,
     -- First person only
-    FIRST_PERSON_LOCK = true
+    FIRST_PERSON_LOCK = true,
+    -- Enable blackout
+    ENABLE_BLACKOUT = false
 }
 
 Config.Spawning = {
