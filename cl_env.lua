@@ -1,7 +1,7 @@
 Citizen.CreateThread(function()
     DisplayRadar(not Config.HIDE_RADAR)
 
-    SetBlackout(true)
+    SetBlackout(Config.ENABLE_BLACKOUT)
 
     if Config.FIRST_PERSON_LOCK then
         SetFollowPedCamViewMode(4)
