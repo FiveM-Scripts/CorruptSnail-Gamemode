@@ -23,6 +23,8 @@ Config.Spawning.Zombies = {
     MAX_HEALTH = 300,
     -- Max Armor
     MAX_ARMOR = 200,
+    -- The speed at which zombies are walking towards enemies
+    WALK_SPEED = 1.0,
     -- Min spawn distance
     MIN_SPAWN_DISTANCE = 100.0,
     -- Despawn distance (should always be at least 2x min spawn distance)

@@ -162,7 +162,7 @@ local function HandleExistingZombies()
 
                     if zombieDecorTarget ~= 0 and Utils.GetDistanceBetweenCoords(GetEntityCoords(zombieDecorTarget), zombieCoords) > 1.0 then
                         if DecorGetInt(handle, ZOMBIE_UPDATE_TASK_TIMEOUT_DECOR) <= currentCloudTime then
-                            TaskGoToEntity(handle, zombieDecorTarget, -1, 1.0, 1.0)
+                            TaskGoToEntity(handle, zombieDecorTarget, -1, 1.0, Config.Spawning.Zombies.WALK_SPEED)
 
                             DecorSetInt(handle, ZOMBIE_UPDATE_TASK_TIMEOUT_DECOR, currentCloudTime + 5)
                         end
