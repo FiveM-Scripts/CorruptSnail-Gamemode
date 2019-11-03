@@ -3,11 +3,13 @@ Citizen.CreateThread(function()
 
     SetBlackout(true)
 
-    SetMaxWantedLevel(0)
-
     if Config.FIRST_PERSON_LOCK then
         SetFollowPedCamViewMode(4)
         SetFollowVehicleCamViewMode(4)
+    end
+
+    for i = 1, 15 do
+        EnableDispatchService(i, false)
     end
 
     while true do
@@ -19,6 +21,8 @@ Citizen.CreateThread(function()
 
         SetPedDensityMultiplierThisFrame(0.0)
         SetScenarioPedDensityMultiplierThisFrame(0.0, 0.0)
+
+        SetMaxWantedLevel(0)
 
         if Config.FIRST_PERSON_LOCK then
             DisableControlAction(0, 0, true)
