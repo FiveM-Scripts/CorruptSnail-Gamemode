@@ -53,7 +53,7 @@ function Spawn.GetRandomMultiPlayerModel()
     SetPedComponentVariation(playerPed, 11, 0, math.random(0, 5), 0)            
 end
 
-AddEventHandler('onClientGameTypeStart', function()
+AddEventHandler("onClientGameTypeStart", function()
     exports.spawnmanager:setAutoSpawnCallback(function()
         spawnPos = Spawn.GetRandomSafeZoneCoords()
         if Config.Spawning.MULTIPLAYER_MODEL then
