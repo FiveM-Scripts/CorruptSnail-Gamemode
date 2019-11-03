@@ -16,7 +16,7 @@ Config.Spawning = {
 
 Config.Spawning.Zombies = {
     -- Max amount of spawned zombies at once by you
-    MAX_AMOUNT = 70,
+    MAX_AMOUNT = 100,
     -- Chance a zombie receives a special attributes (per attribute, 0 - 100)
     ATTR_CHANCE = 25,
     -- Max Health
