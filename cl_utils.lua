@@ -15,7 +15,6 @@ function Utils.CreatePed(model, pedType, pos, heading)
         WaitForModel(model)
 
         local ped = CreatePed(pedType, model, pos.x, pos.y, pos.z, heading, true)
-
         SetModelAsNoLongerNeeded(model)
 
         return ped
@@ -119,4 +118,15 @@ end
 
 function Utils.GetRandomPlayer()
     return math.random(#GetActivePlayers())
+end
+
+function Utils.AddSafeZoneBlips()
+    for k,v in pairs(Config.Spawning.SPAWN_POINTS) do
+        local blip = AddBlipForCoord(v.x, v.y, v.z)
+
+        SetBlipSprite(blip, 487)
+        SetBlipAsShortRange(blip, true)
+        SetBlipScale(blip, 0.9)
+        SetBlipNameFromTextFile(blip, "BLIP_CPOINT")        
+    end
 end
