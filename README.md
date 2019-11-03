@@ -1,8 +1,14 @@
 # CorruptSnail
-
+[![GitHub release](https://img.shields.io/github/release/FiveM-Scripts/CorruptSnail-Gamemode.svg)](https://github.com/FiveM-Scripts/CorruptSnail-Gamemode/releases/latest)
+[![GitHub license](https://img.shields.io/github/license/FiveM-Scripts/CorruptSnail-Gamemode.svg)](LICENSE) <a href="https://discordapp.com/invite/qnAqCEd" title="Chat on Discord"><img alt="Discord Status" src="https://discordapp.com/api/guilds/285462938691567627/widget.png"></a>   
 A zombie gamemode for FiveM with a big focus on letting the player adventure the map to find random scenarios involving AI survivors and zombies.
 
 This mod is still in an early WIP phase.
+
+## Installation
+- Download the resource.
+- Extract the zipfile and copy all files to `resources/corruptsnail/`.
+- Open **server.cfg** and add `ensure corruptsnail`.
 
 **TODO:**
 - Add a leveling system (XP could probably be gained by killing zombies or completing random missions)
