@@ -5,15 +5,13 @@ AddRelationshipGroup("_ZOMBIE")
 SetRelationshipBetweenGroups(5, PLAYER_GROUP, ZOMBIE_GROUP)
 SetRelationshipBetweenGroups(5, ZOMBIE_GROUP, PLAYER_GROUP)
 
-Relationships = {"GANG_1", "GANG_2", "GANG_9", "AMBIENT_GANG_BALLAS", "AMBIENT_GANG_CULT", "AMBIENT_GANG_FAMILY", "AMBIENT_GANG_LOST", "CIVMALE", "CIVFEMALE"}
-if Config.ENABLE_PEDS then
-    for k,v in pairs(Relationships) do
-        SetRelationshipBetweenGroups(5, ZOMBIE_GROUP, GetHashKey(v))
-        SetRelationshipBetweenGroups(5, GetHashKey(v), ZOMBIE_GROUP)
+local RelationshipGroups = {"GANG_1", "GANG_2", "GANG_9", "AMBIENT_GANG_BALLAS", "AMBIENT_GANG_CULT", "AMBIENT_GANG_FAMILY", "AMBIENT_GANG_LOST", "CIVMALE", "CIVFEMALE"}
+for k, v in pairs(RelationshipGroups) do
+    SetRelationshipBetweenGroups(5, ZOMBIE_GROUP, GetHashKey(v))
+    SetRelationshipBetweenGroups(5, GetHashKey(v), ZOMBIE_GROUP)
 
-        SetRelationshipBetweenGroups(0, PLAYER_GROUP, GetHashKey(v))
-        SetRelationshipBetweenGroups(0, GetHashKey(v), PLAYER_GROUP)
-    end
+    SetRelationshipBetweenGroups(1, PLAYER_GROUP, GetHashKey(v))
+    SetRelationshipBetweenGroups(1, GetHashKey(v), PLAYER_GROUP)
 end
 
 local ZOMBIE_IGNORE_COMBAT_TIMEOUT_DECOR = "_ZOMBIE_IGNORE_COMBAT_TIMEOUT"
@@ -147,15 +145,6 @@ local function HandleExistingZombies()
                 local relationshipGroup = ped.RelationshipGroup
                 local zombieGameTarget = ped.ZombieCombatTarget
                 local zombieCombatTimeout = DecorGetInt(handle, ZOMBIE_IGNORE_COMBAT_TIMEOUT_DECOR)
-
-                for _, ped2 in ipairs(m_peds) do
-                    if not ped2.IsZombie and IsPedAPlayer(ped2.Handle) then
-                        local relationshipGroup2 = ped2.RelationshipGroup
-
-                        SetRelationshipBetweenGroups(5, relationshipGroup, relationshipGroup2)
-                        SetRelationshipBetweenGroups(5, relationshipGroup2, relationshipGroup)
-                    end
-                end
 
                 SetAmbientVoiceName(handle, "ALIENS")
                 DisablePedPainAudio(handle, true)
