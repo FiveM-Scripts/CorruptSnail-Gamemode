@@ -103,7 +103,7 @@ local function FetchPeds()
         if untilPause < 0 then
             untilPause = 10
 
-            Wait(50)
+            Wait(0)
         end
     end
 
@@ -135,7 +135,7 @@ local function HandleExistingZombies()
     local mPlayerPed = PlayerPedId()
     local currentCloudTime = GetCloudTimeAsInt()
 
-    local untilPause = 5
+    local untilPause = 10
     for _, ped in ipairs(m_peds) do
         if ped.IsZombie then
             local handle = ped.Handle
@@ -169,8 +169,8 @@ local function HandleExistingZombies()
 
                 if Config.Spawning.Zombies.ENABLE_SOUNDS and DecorGetInt(handle, ZOMBIE_TIME_UNTIL_SOUND_DECOR) <= currentCloudTime then
                     DisablePedPainAudio(handle, false)
-                    --PlayPain(handle, 16)
-                    DecorSetInt(handle, ZOMBIE_TIME_UNTIL_SOUND_DECOR, currentCloudTime + math.random(3, 5))
+                    PlayPain(handle, 27)
+                    DecorSetInt(handle, ZOMBIE_TIME_UNTIL_SOUND_DECOR, currentCloudTime + math.random(5, 60))
                 end
 
                 if zombieGameTarget and zombieCombatTimeout <= currentCloudTime
@@ -182,7 +182,7 @@ local function HandleExistingZombies()
 
                     if zombieDecorTarget ~= 0 and Utils.GetDistanceBetweenCoords(GetEntityCoords(zombieDecorTarget), zombieCoords) > 2.0 then
                         if DecorGetInt(handle, ZOMBIE_UPDATE_TASK_TIMEOUT_DECOR) <= currentCloudTime then
-                            TaskGoToEntity(handle, zombieDecorTarget, -1, 1.0, Config.Spawning.Zombies.WALK_SPEED)
+                            TaskGoToEntity(handle, zombieDecorTarget, -1, 2.0, Config.Spawning.Zombies.WALK_SPEED)
 
                             DecorSetInt(handle, ZOMBIE_UPDATE_TASK_TIMEOUT_DECOR, currentCloudTime + 3)
                         end
@@ -199,7 +199,7 @@ local function HandleExistingZombies()
 
         untilPause = untilPause - 1
         if untilPause == 0 then
-            untilPause = 5
+            untilPause = 10
 
             Wait(0)
         end
