@@ -155,7 +155,7 @@ local function HandleExistingZombies()
                 SetBlockingOfNonTemporaryEvents(handle, zombieCombatTimeout > currentCloudTime)
 
                 if zombieGameTarget and Utils.GetDistanceBetweenCoords(GetEntityCoords(zombieGameTarget), zombieCoords) > 1.0 then
-                    DecorSetInt(handle, ZOMBIE_IGNORE_COMBAT_TIMEOUT_DECOR, currentCloudTime + 20)
+                    DecorSetInt(handle, ZOMBIE_IGNORE_COMBAT_TIMEOUT_DECOR, currentCloudTime + 10)
                     DecorSetInt(handle, ZOMBIE_TARGET_DECOR, zombieGameTarget)
                 else
                     local zombieDecorTarget = DecorGetInt(handle, ZOMBIE_TARGET_DECOR)
@@ -164,7 +164,7 @@ local function HandleExistingZombies()
                         if DecorGetInt(handle, ZOMBIE_UPDATE_TASK_TIMEOUT_DECOR) <= currentCloudTime then
                             TaskGoToEntity(handle, zombieDecorTarget, -1, 1.0, Config.Spawning.Zombies.WALK_SPEED)
 
-                            DecorSetInt(handle, ZOMBIE_UPDATE_TASK_TIMEOUT_DECOR, currentCloudTime + 5)
+                            DecorSetInt(handle, ZOMBIE_UPDATE_TASK_TIMEOUT_DECOR, currentCloudTime + 3)
                         end
                     else
                         if zombieGameTarget and not IsPedInCombat(handle, zombieGameTarget) then
