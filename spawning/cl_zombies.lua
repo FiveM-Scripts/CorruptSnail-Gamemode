@@ -20,11 +20,11 @@ DecorRegister(ZOMBIE_IGNORE_COMBAT_TIMEOUT_DECOR, 3)
 local ZOMBIE_TARGET_DECOR = "_ZOMBIE_TARGET"
 DecorRegister(ZOMBIE_TARGET_DECOR, 3)
 
-local ZOMBIE_UPDATE_TASK_TIMEOUT_DECOR = "_ZOMBIE_UPDATE_TASK_TIMEOUT"
-DecorRegister(ZOMBIE_UPDATE_TASK_TIMEOUT_DECOR, 3)
-
 local ZOMBIE_TIME_UNTIL_SOUND_DECOR = "_ZOMBIE_SOUND_TIMEOUT"
 DecorRegister(ZOMBIE_TIME_UNTIL_SOUND_DECOR, 3)
+
+local ZOMBIE_TASK_DECOR = "_ZOMBIE_TASK"
+DecorRegister(ZOMBIE_TASK_DECOR, 3)
 
 local ZOMBIE_MODEL = GetHashKey(Config.Spawning.Zombies.ZOMBIE_MODEL)
 
@@ -67,9 +67,6 @@ local function ZombifyPed(ped)
     if AttrRollTheDice() then
         SetPedSuffersCriticalHits(ped, false)
     end
-    --[[if AttrRollTheDice() then
-        SetPedRagdollBlockingFlags(ped, 1)
-    end]]--
 end
 
 local function FetchPeds()
@@ -121,11 +118,6 @@ local function SpawnRandomZombieIfPossible()
 
         local zombie = Utils.CreatePed(ZOMBIE_MODEL, 25, vector3(spawnPos.x, spawnPos.y, newZ), 0.0)
         ZombifyPed(zombie)
-
-        DecorSetInt(zombie, ZOMBIE_IGNORE_COMBAT_TIMEOUT_DECOR, 0)
-        DecorSetInt(zombie, ZOMBIE_TARGET_DECOR, 0)
-        DecorSetInt(zombie, ZOMBIE_UPDATE_TASK_TIMEOUT_DECOR, 0)
-        DecorSetInt(zombie, ZOMBIE_TIME_UNTIL_SOUND_DECOR, 0)
     end
 end
 
@@ -142,8 +134,6 @@ local function HandleExistingZombies()
             if IsPedDeadOrDying(handle) or not Utils.IsPosNearAPlayer(zombieCoords, Config.Spawning.Zombies.DESPAWN_DISTANCE) then
                 SetPedAsNoLongerNeeded(handle)
             else
-                local relationshipGroup = ped.RelationshipGroup
-                local zombieGameTarget = ped.ZombieCombatTarget
                 local zombieCombatTimeout = DecorGetInt(handle, ZOMBIE_IGNORE_COMBAT_TIMEOUT_DECOR)
 
                 SetAmbientVoiceName(handle, "ALIENS")
@@ -162,23 +152,41 @@ local function HandleExistingZombies()
                     DecorSetInt(handle, ZOMBIE_TIME_UNTIL_SOUND_DECOR, currentCloudTime + math.random(5, 60))
                 end
 
+                local zombieGameTarget = ped.ZombieCombatTarget
+
                 if zombieGameTarget and zombieCombatTimeout <= currentCloudTime
                     and Utils.GetDistanceBetweenCoords(GetEntityCoords(zombieGameTarget), zombieCoords) > 2.0 then
-                    DecorSetInt(handle, ZOMBIE_IGNORE_COMBAT_TIMEOUT_DECOR, currentCloudTime + 10)
+                    DecorSetInt(handle, ZOMBIE_IGNORE_COMBAT_TIMEOUT_DECOR, currentCloudTime + 20)
                     DecorSetInt(handle, ZOMBIE_TARGET_DECOR, zombieGameTarget)
-                else
-                    local zombieDecorTarget = DecorGetInt(handle, ZOMBIE_TARGET_DECOR)
+                    DecorSetInt(handle, ZOMBIE_TASK_DECOR, 0)
 
-                    if zombieDecorTarget ~= 0 and Utils.GetDistanceBetweenCoords(GetEntityCoords(zombieDecorTarget), zombieCoords) > 2.0 then
-                        if DecorGetInt(handle, ZOMBIE_UPDATE_TASK_TIMEOUT_DECOR) <= currentCloudTime then
+                    SetBlockingOfNonTemporaryEvents(handle, true)
+                end
+
+                local zombieDecorTarget = DecorGetInt(handle, ZOMBIE_TARGET_DECOR)
+
+                if zombieDecorTarget ~= 0 then
+                    local curTask = DecorGetInt(handle, ZOMBIE_TASK_DECOR)
+                    local zombieDecorTargetPos = GetEntityCoords(zombieDecorTarget)
+
+                    if Utils.GetDistanceBetweenCoords(zombieDecorTargetPos, zombieCoords) > 2.0 then
+                        if IsPedOnVehicle(zombieDecorTarget) then
+                            if curTask ~= 2 then
+                                TaskCombatPed(handle, zombieDecorTarget, 0, 16)
+
+                                DecorSetInt(handle, ZOMBIE_TASK_DECOR, 2)
+                            end
+                        elseif curTask ~= 1 then
                             TaskGoToEntity(handle, zombieDecorTarget, -1, 2.0, Config.Spawning.Zombies.WALK_SPEED)
 
-                            DecorSetInt(handle, ZOMBIE_UPDATE_TASK_TIMEOUT_DECOR, currentCloudTime + 3)
+                            DecorSetInt(handle, ZOMBIE_TASK_DECOR, 1)
                         end
                     else
-                        if zombieGameTarget and not IsPedInCombat(handle, zombieGameTarget) then
-                            TaskCombatPed(handle, zombieGameTarget, 0, 16)
-                        elseif zombieDecorTarget ~= 0 and not IsPedInCombat(handle, zombieDecorTarget) then
+                        DecorSetInt(handle, ZOMBIE_TASK_DECOR, 0)
+
+                        if not IsPedOnVehicle(handle) and IsPedOnVehicle(zombieDecorTarget) then
+                            TaskClimb(handle)
+                        elseif not IsPedInCombat(handle, zombieDecorTarget) then
                             TaskCombatPed(handle, zombieDecorTarget, 0, 16)
                         end
                     end
