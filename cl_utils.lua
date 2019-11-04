@@ -15,6 +15,7 @@ function Utils.CreatePed(model, pedType, pos, heading)
         WaitForModel(model)
 
         local ped = CreatePed(pedType, model, pos.x, pos.y, pos.z, heading, true)
+        
         SetModelAsNoLongerNeeded(model)
 
         return ped

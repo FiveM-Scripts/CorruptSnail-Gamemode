@@ -5,15 +5,6 @@ AddRelationshipGroup("_ZOMBIE")
 SetRelationshipBetweenGroups(5, PLAYER_GROUP, ZOMBIE_GROUP)
 SetRelationshipBetweenGroups(5, ZOMBIE_GROUP, PLAYER_GROUP)
 
-local RelationshipGroups = {"GANG_1", "GANG_2", "GANG_9", "AMBIENT_GANG_BALLAS", "AMBIENT_GANG_CULT", "AMBIENT_GANG_FAMILY", "AMBIENT_GANG_LOST", "CIVMALE", "CIVFEMALE"}
-for k, v in pairs(RelationshipGroups) do
-    SetRelationshipBetweenGroups(5, ZOMBIE_GROUP, GetHashKey(v))
-    SetRelationshipBetweenGroups(5, GetHashKey(v), ZOMBIE_GROUP)
-
-    SetRelationshipBetweenGroups(1, PLAYER_GROUP, GetHashKey(v))
-    SetRelationshipBetweenGroups(1, GetHashKey(v), PLAYER_GROUP)
-end
-
 local ZOMBIE_IGNORE_COMBAT_TIMEOUT_DECOR = "_ZOMBIE_IGNORE_COMBAT_TIMEOUT"
 DecorRegister(ZOMBIE_IGNORE_COMBAT_TIMEOUT_DECOR, 3)
 
@@ -106,7 +97,7 @@ local function FetchPeds()
     m_zombieAmount = zombieAmount
 end
 
-local function SpawnRandomZombieIfPossible()
+local function TrySpawnRandomZombie()
     local spawnPos = Utils.FindGoodSpawnPos(Config.Spawning.Zombies.MIN_SPAWN_DISTANCE)
 
     if spawnPos then
@@ -214,7 +205,7 @@ Citizen.CreateThread(function()
         FetchPeds()
 
         if Player.IsSpawnHost() and m_zombieAmount <= Config.Spawning.Zombies.MAX_AMOUNT then
-            SpawnRandomZombieIfPossible()
+            TrySpawnRandomZombie()
         end
     end
 end)
@@ -228,5 +219,28 @@ Citizen.CreateThread(function()
         Wait(100)
 
         HandleExistingZombies(m_peds)
+    end
+end)
+
+Citizen.CreateThread(function()
+    while true do
+        Wait(10000)
+
+        local untilPause = 10
+        for _, ped in ipairs(m_peds) do
+            if not ped.IsZombie then
+                local relationshipGroup = ped.RelationshipGroup
+                
+                SetRelationshipBetweenGroups(5, ZOMBIE_GROUP, relationshipGroup)
+                SetRelationshipBetweenGroups(5, relationshipGroup, ZOMBIE_GROUP)
+
+                untilPause = untilPause - 1
+                if untilPause == 0 then
+                    untilPause = 10
+        
+                    Wait(0)
+                end
+            end
+        end
     end
 end)
