@@ -90,6 +90,8 @@ AddEventHandler("onClientGameTypeStart", function()
     exports.spawnmanager:setAutoSpawn(true)
     exports.spawnmanager:forceRespawn()
 
-    Wait(2000)
+    Wait(3000)
+    
+    Utils.LoadInteriors()
     SendNotification("CHAR_LESTER_DEATHWISH", 1, "CorruptSnail", "", GetLabelText("collision_9a0v4k"))
 end)

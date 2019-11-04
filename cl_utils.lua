@@ -128,6 +128,31 @@ function Utils.AddSafeZoneBlips()
         SetBlipSprite(blip, 487)
         SetBlipAsShortRange(blip, true)
         SetBlipScale(blip, 0.9)
-        SetBlipNameFromTextFile(blip, "BLIP_CPOINT")        
+        SetBlipNameFromTextFile(blip, "BLIP_CPOINT")
     end
+end
+
+function Utils.LoadInteriors()
+    RequestIpl("shr_int")
+    local PDM = GetInteriorAtCoords(-59.7936, -1098.784, 27.2612)
+    LoadInterior(PDM)
+    while not IsInteriorReady(PDM) do
+        Wait(0)
+    end
+
+    EnableInteriorProp(PDM, "csr_beforeMission")
+    EnableInteriorProp(PDM, "shutter_closed")
+    RefreshInterior(PDM)
+
+    RequestIpl("id2_14_during_door")
+    RequestIpl("id2_14_during1")
+
+    RequestIpl("sp1_10_real_interior")
+    RequestIpl("sp1_10_real_interior_lod")
+
+    RequestIpl("methtrailer_grp1")
+    RequestIpl("bkr_bi_hw1_13_int")
+    
+    RequestIpl("RC12B_Destroyed")
+    RequestIpl("RC12B_HospitalInterior")
 end
