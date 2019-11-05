@@ -131,3 +131,13 @@ function Utils.AddSafeZoneBlips()
         SetBlipNameFromTextFile(blip, "BLIP_CPOINT")        
     end
 end
+
+function Utils.CreateLoadedInThread(func)
+    Citizen.CreateThread(function()
+        while not NetworkIsSessionActive() do
+            Wait(100)
+        end
+
+        func()
+    end)
+end

@@ -194,11 +194,7 @@ local function HandleExistingZombies()
     end
 end
 
-Citizen.CreateThread(function()
-    while not NetworkIsSessionActive() do
-        Wait(100)
-    end
-
+Utils.CreateLoadedInThread(function()
     while true do
         Wait(Config.Spawning.TICK_RATE)
 
@@ -210,11 +206,7 @@ Citizen.CreateThread(function()
     end
 end)
 
-Citizen.CreateThread(function()
-    while not NetworkIsSessionActive() do
-        Wait(100)
-    end
-
+Utils.CreateLoadedInThread(function()
     while true do
         Wait(100)
 
@@ -222,7 +214,7 @@ Citizen.CreateThread(function()
     end
 end)
 
-Citizen.CreateThread(function()
+Utils.CreateLoadedInThread(function()
     while true do
         Wait(10000)
 
