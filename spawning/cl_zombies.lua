@@ -1,10 +1,3 @@
-local PLAYER_GROUP = GetHashKey("PLAYER")
-local ZOMBIE_GROUP = GetHashKey("_ZOMBIE")
-
-AddRelationshipGroup("_ZOMBIE")
-SetRelationshipBetweenGroups(5, PLAYER_GROUP, ZOMBIE_GROUP)
-SetRelationshipBetweenGroups(5, ZOMBIE_GROUP, PLAYER_GROUP)
-
 local ZOMBIE_IGNORE_COMBAT_TIMEOUT_DECOR = "_ZOMBIE_IGNORE_COMBAT_TIMEOUT"
 DecorRegister(ZOMBIE_IGNORE_COMBAT_TIMEOUT_DECOR, 3)
 
@@ -18,9 +11,6 @@ local ZOMBIE_TASK_DECOR = "_ZOMBIE_TASK"
 DecorRegister(ZOMBIE_TASK_DECOR, 3)
 
 local ZOMBIE_MODEL = GetHashKey(Config.Spawning.Zombies.ZOMBIE_MODEL)
-
-local m_peds = {}
-local m_zombieAmount = 0
 
 local function AttrRollTheDice()
     return math.random(100) <= Config.Spawning.Zombies.ATTR_CHANCE
@@ -60,43 +50,6 @@ local function ZombifyPed(ped)
     end
 end
 
-local function FetchPeds()
-    local peds = {}
-    local zombieAmount = 0
-
-    local untilPause = 10
-    for ped in EntityEnum.EnumeratePeds() do
-        local relationshipGroup = GetPedRelationshipGroupHash(ped)
-        local isZombie = relationshipGroup == ZOMBIE_GROUP
-        local combatTarget
-
-        if isZombie then
-            zombieAmount = zombieAmount + 1
-
-            for ped2 in EntityEnum.EnumeratePeds() do
-                if IsPedInCombat(ped, ped2) then
-                    combatTarget = ped2
-
-                    break
-                end
-            end
-        end
-
-        table.insert(peds, {Handle = ped, IsZombie = isZombie, RelationshipGroup = relationshipGroup,
-            ZombieCombatTarget = combatTarget})
-
-        untilPause = untilPause - 1
-        if untilPause < 0 then
-            untilPause = 10
-
-            Wait(0)
-        end
-    end
-
-    m_peds = peds
-    m_zombieAmount = zombieAmount
-end
-
 local function TrySpawnRandomZombie()
     local spawnPos = Utils.FindGoodSpawnPos(Config.Spawning.Zombies.MIN_SPAWN_DISTANCE)
 
@@ -117,100 +70,91 @@ local function HandleExistingZombies()
     local currentCloudTime = GetCloudTimeAsInt()
 
     local untilPause = 10
-    for _, ped in ipairs(m_peds) do
-        if ped.IsZombie then
-            local handle = ped.Handle
-            local zombieCoords = GetEntityCoords(handle)
+    for ped, pedData in pairs(g_peds) do
+        if pedData.IsZombie then
+            local zombieCoords = GetEntityCoords(ped)
 
-            if IsPedDeadOrDying(handle) or not Utils.IsPosNearAPlayer(zombieCoords, Config.Spawning.Zombies.DESPAWN_DISTANCE) then
-                SetPedAsNoLongerNeeded(handle)
+            if Player.IsSpawnHost() and (IsPedDeadOrDying(ped) or not Utils.IsPosNearAPlayer(zombieCoords, Config.Spawning.Zombies.DESPAWN_DISTANCE)) then
+                SetPedAsNoLongerNeeded(ped)
             else
-                local zombieCombatTimeout = DecorGetInt(handle, ZOMBIE_IGNORE_COMBAT_TIMEOUT_DECOR)
+                local zombieCombatTimeout = DecorGetInt(ped, ZOMBIE_IGNORE_COMBAT_TIMEOUT_DECOR)
 
-                SetAmbientVoiceName(handle, "ALIENS")
-                DisablePedPainAudio(handle, true)
+                SetAmbientVoiceName(ped, "ALIENS")
+                DisablePedPainAudio(ped, true)
 
                 if not HasAnimSetLoaded("move_m@drunk@verydrunk") then
                     RequestAnimSet("move_m@drunk@verydrunk")
                 end
-                SetPedMovementClipset(handle, "move_m@drunk@verydrunk", 0.5)
+                SetPedMovementClipset(ped, "move_m@drunk@verydrunk", 0.5)
 
-                SetBlockingOfNonTemporaryEvents(handle, zombieCombatTimeout > currentCloudTime)
+                SetBlockingOfNonTemporaryEvents(ped, zombieCombatTimeout > currentCloudTime)
 
-                if Config.Spawning.Zombies.ENABLE_SOUNDS and DecorGetInt(handle, ZOMBIE_TIME_UNTIL_SOUND_DECOR) <= currentCloudTime then
-                    DisablePedPainAudio(handle, false)
-                    PlayPain(handle, 27)
-                    DecorSetInt(handle, ZOMBIE_TIME_UNTIL_SOUND_DECOR, currentCloudTime + math.random(5, 60))
+                if Config.Spawning.Zombies.ENABLE_SOUNDS and DecorGetInt(ped, ZOMBIE_TIME_UNTIL_SOUND_DECOR) <= currentCloudTime then
+                    DisablePedPainAudio(ped, false)
+                    PlayPain(ped, 27)
+                    DecorSetInt(ped, ZOMBIE_TIME_UNTIL_SOUND_DECOR, currentCloudTime + math.random(5, 60))
                 end
 
-                local zombieGameTarget = ped.ZombieCombatTarget
+                local zombieGameTarget = pedData.ZombieCombatTarget
 
                 if zombieGameTarget and zombieCombatTimeout <= currentCloudTime
                     and Utils.GetDistanceBetweenCoords(GetEntityCoords(zombieGameTarget), zombieCoords) > 2.0 then
-                    DecorSetInt(handle, ZOMBIE_IGNORE_COMBAT_TIMEOUT_DECOR, currentCloudTime + 20)
-                    DecorSetInt(handle, ZOMBIE_TARGET_DECOR, zombieGameTarget)
-                    DecorSetInt(handle, ZOMBIE_TASK_DECOR, 0)
+                    DecorSetInt(ped, ZOMBIE_IGNORE_COMBAT_TIMEOUT_DECOR, currentCloudTime + 20)
+                    DecorSetInt(ped, ZOMBIE_TARGET_DECOR, zombieGameTarget)
+                    DecorSetInt(ped, ZOMBIE_TASK_DECOR, 0)
 
-                    SetBlockingOfNonTemporaryEvents(handle, true)
+                    SetBlockingOfNonTemporaryEvents(ped, true)
                 end
 
-                local zombieDecorTarget = DecorGetInt(handle, ZOMBIE_TARGET_DECOR)
+                local zombieDecorTarget = DecorGetInt(ped, ZOMBIE_TARGET_DECOR)
 
                 if zombieDecorTarget ~= 0 then
-                    local curTask = DecorGetInt(handle, ZOMBIE_TASK_DECOR)
+                    local curTask = DecorGetInt(ped, ZOMBIE_TASK_DECOR)
                     local zombieDecorTargetPos = GetEntityCoords(zombieDecorTarget)
 
                     if Utils.GetDistanceBetweenCoords(zombieDecorTargetPos, zombieCoords) > 2.0 then
                         if IsPedOnVehicle(zombieDecorTarget) then
                             if curTask ~= 2 then
-                                TaskCombatPed(handle, zombieDecorTarget, 0, 16)
+                                TaskCombatPed(ped, zombieDecorTarget, 0, 16)
 
-                                DecorSetInt(handle, ZOMBIE_TASK_DECOR, 2)
+                                DecorSetInt(ped, ZOMBIE_TASK_DECOR, 2)
                             end
                         elseif curTask ~= 1 then
-                            TaskGoToEntity(handle, zombieDecorTarget, -1, 2.0, Config.Spawning.Zombies.WALK_SPEED)
+                            TaskGoToEntity(ped, zombieDecorTarget, -1, 2.0, Config.Spawning.Zombies.WALK_SPEED)
 
-                            DecorSetInt(handle, ZOMBIE_TASK_DECOR, 1)
+                            DecorSetInt(ped, ZOMBIE_TASK_DECOR, 1)
                         end
                     else
-                        DecorSetInt(handle, ZOMBIE_TASK_DECOR, 0)
+                        DecorSetInt(ped, ZOMBIE_TASK_DECOR, 0)
 
-                        if not IsPedOnVehicle(handle) and IsPedOnVehicle(zombieDecorTarget) then
-                            TaskClimb(handle)
-                        elseif not IsPedInCombat(handle, zombieDecorTarget) then
-                            TaskCombatPed(handle, zombieDecorTarget, 0, 16)
+                        if not IsPedOnVehicle(ped) and IsPedOnVehicle(zombieDecorTarget) then
+                            TaskClimb(ped)
+                        elseif not IsPedInCombat(ped, zombieDecorTarget) then
+                            TaskCombatPed(ped, zombieDecorTarget, 0, 16)
                         end
                     end
                 end
             end
-        end
 
-        untilPause = untilPause - 1
-        if untilPause == 0 then
-            untilPause = 10
+            untilPause = untilPause - 1
+            if untilPause == 0 then
+                untilPause = 10
 
-            Wait(0)
+                Wait(0)
+            end
         end
     end
 end
 
 Utils.CreateLoadedInThread(function()
     while true do
-        Wait(Config.Spawning.TICK_RATE)
+        Wait(250)
 
-        FetchPeds()
-
-        if Player.IsSpawnHost() and m_zombieAmount <= Config.Spawning.Zombies.MAX_AMOUNT then
+        if Player.IsSpawnHost() and g_zombieAmount <= Config.Spawning.Zombies.MAX_AMOUNT then
             TrySpawnRandomZombie()
         end
-    end
-end)
 
-Utils.CreateLoadedInThread(function()
-    while true do
-        Wait(100)
-
-        HandleExistingZombies(m_peds)
+        HandleExistingZombies()
     end
 end)
 
@@ -219,9 +163,9 @@ Utils.CreateLoadedInThread(function()
         Wait(10000)
 
         local untilPause = 10
-        for _, ped in ipairs(m_peds) do
-            if not ped.IsZombie then
-                local relationshipGroup = ped.RelationshipGroup
+        for ped, pedData in pairs(g_peds) do
+            if not pedData.IsZombie then
+                local relationshipGroup = pedData.RelationshipGroup
                 
                 SetRelationshipBetweenGroups(5, ZOMBIE_GROUP, relationshipGroup)
                 SetRelationshipBetweenGroups(5, relationshipGroup, ZOMBIE_GROUP)

@@ -12,8 +12,6 @@ Citizen.CreateThread(function()
     for i = 1, 15 do
         EnableDispatchService(i, false)
     end
-
-    Utils.AddSafeZoneBlips()
     
     while true do
         Wait(0)

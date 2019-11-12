@@ -14,8 +14,6 @@ Config = {
 }
 
 Config.Spawning = {
-    -- Time between each "tick" for operations (in ms)
-    TICK_RATE = 500,
     -- Min distance between players to decide one "host"
     HOST_DECIDE_DIST = 200.0,
     -- Set the default spawnpoints when joining the server.
@@ -54,7 +52,7 @@ Config.Spawning = {
 
 Config.Spawning.Zombies = {
     -- Max amount of spawned zombies at once by you
-    MAX_AMOUNT = 100,
+    MAX_AMOUNT = 75,
     -- Chance a zombie receives a special attributes (per attribute, 0 - 100)
     ATTR_CHANCE = 25,
     -- Max Health
@@ -72,4 +70,48 @@ Config.Spawning.Zombies = {
     -- Model of zombies
     -- TODO: List of models
     ZOMBIE_MODEL = "u_m_y_zombie_01"
+}
+
+Config.Spawning.Safezones = {
+    -- Min distance to safezone to spawn guards
+    SPAWN_DIST = 300.0,
+    -- Guard Weapons
+    GUARD_WEAPONS = {
+        "WEAPON_COMBATMG",
+        "WEAPON_MINIGUN",
+        "WEAPON_ASSAULTSHOTGUN"
+    },
+    -- Safezones
+    SAFEZONES = {
+        {
+            Core = { 717.25, -964.09 },
+            GuardSpawns = {
+                { 711.76, -979.43, 24.11, 183.15 },
+                { 723.64, -978.59, 24.13, 223.51 },
+                { 742.28, -969.73, 24.52, 272.48 },
+                { 689.58, -1028.74, 22.43, 242.04 }
+            }
+        },
+        {
+            Core = { 1853.61, 3686.79 },
+            GuardSpawns = {
+                { 1849.08, 3678.36, 34.27, 210.17 },
+                { 1864.21, 3686.78, 34.27, 212.44 },
+                { 1848.68, 3699.51, 34.27, 31.72 },
+                { 1817.18, 3680.22, 34.28, 58.85 },
+                { 1815.68, 3669.67, 34.28, 117.48 },
+                { 1961.26, 3735.42, 32.37, 201.27 },
+                { 1971.52, 3741.76, 32.33, 160.78 }
+            }
+        },
+        {
+            Core = { -106.72, 6466.90 },
+            GuardSpawns = {
+                { -110.63, 6457.0, 31.46, 165.7 },
+                { -116.71, 6462.79, 31.47, 91.52 },
+                { -142.54, 6466.9, 31.72, 98.25 },
+                { -111.89, 6440.0, 31.48, 283.98 }
+            }
+        }
+    }
 }
