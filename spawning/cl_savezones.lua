@@ -11,7 +11,8 @@ local function SpawnGuard(guardSpawn)
     SetPedRelationshipGroupHash(guard, SAFEZONE_GUARD_GROUP)
 
     SetEntityInvincible(guard, true)
-    SetPedSeeingRange(guard, 9999.0)
+    SetPedSeeingRange(guard, 75.0)
+    SetPedHearingRange(guard, 75.0)
 
     GiveWeaponToPed(guard, GetHashKey(Config.Spawning.Safezones.GUARD_WEAPONS[math.random(1, #Config.Spawning.Safezones.GUARD_WEAPONS)]),
         9999, true, true)
