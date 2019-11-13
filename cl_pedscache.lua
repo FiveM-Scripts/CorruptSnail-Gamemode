@@ -1,10 +1,8 @@
 g_peds = {}
 g_zombieAmount = 0
-g_guardAmount = 0
 
 local function FetchPeds()
     local zombieAmount = 0
-    local guardAmount = 0
 
     local untilPause = 10
 
@@ -13,8 +11,6 @@ local function FetchPeds()
             g_peds[ped] = nil
         elseif pedData.IsZombie then
             zombieAmount = zombieAmount + 1
-        elseif pedData.IsGuard then
-            guardAmount = guardAmount + 1
         end
     end
 
@@ -37,10 +33,6 @@ local function FetchPeds()
                 end
             end
 
-            if isGuard then
-                guardAmount = guardAmount + 1
-            end
-
             g_peds[ped] = {IsZombie = isZombie, RelationshipGroup = relationshipGroup, ZombieCombatTarget = combatTarget,
                 IsGuard = isGuard}
 
@@ -54,7 +46,6 @@ local function FetchPeds()
     end
 
     g_zombieAmount = zombieAmount
-    g_guardAmount = guardAmount
 end
 
 Utils.CreateLoadedInThread(function()
