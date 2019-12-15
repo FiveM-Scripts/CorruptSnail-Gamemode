@@ -1,8 +1,9 @@
-Citizen.CreateThread(function()
+Utils.CreateLoadedInThread(function()
     DisplayRadar(not Config.HIDE_RADAR)
     SetBlackout(Config.ENABLE_BLACKOUT)
     SetAudioFlag("DisableFlightMusic", true)
     SetAudioFlag("PoliceScannerDisabled", true)
+    StartAudioScene("DLC_MPHEIST_LOBBY_SCENE")
 
     if Config.FIRST_PERSON_LOCK then
         SetFollowPedCamViewMode(4)
