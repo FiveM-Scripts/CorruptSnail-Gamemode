@@ -35,6 +35,7 @@ local function ZombifyPed(ped)
     SetPedRagdollBlockingFlags(ped, 4)
     SetPedCanRagdollFromPlayerImpact(ped, false)
     SetPedCanPlayAmbientAnims(ped, false)
+    SetPedPathAvoidFire(ped, false)
     SetPedKeepTask(ped, true)
     TaskWanderStandard(ped, 10.0, 10)
 
