@@ -3,7 +3,7 @@ Utils.CreateLoadedInThread(function()
     SetBlackout(Config.ENABLE_BLACKOUT)
     SetAudioFlag("DisableFlightMusic", true)
     SetAudioFlag("PoliceScannerDisabled", true)
-    StartAudioScene("DLC_MPHEIST_LOBBY_SCENE")
+    StartAudioScene("FBI_HEIST_H5_MUTE_AMBIENCE_SCENE")
 
     if Config.FIRST_PERSON_LOCK then
         SetFollowPedCamViewMode(4)
