@@ -89,7 +89,7 @@ AddEventHandler("onClientGameTypeStart", function()
 
     exports.spawnmanager:setAutoSpawn(true)
 
-    if GetIsLoadingScreenActive() then
+    if GetIsLoadingScreenActive() or not IsGameplayCamRendering() then
         exports.spawnmanager:forceRespawn()
     end
 
