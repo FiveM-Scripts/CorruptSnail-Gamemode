@@ -1,8 +1,9 @@
-Citizen.CreateThread(function()
+Utils.CreateLoadedInThread(function()
     DisplayRadar(not Config.HIDE_RADAR)
     SetBlackout(Config.ENABLE_BLACKOUT)
     SetAudioFlag("DisableFlightMusic", true)
     SetAudioFlag("PoliceScannerDisabled", true)
+    StartAudioScene("FBI_HEIST_H5_MUTE_AMBIENCE_SCENE")
 
     if Config.FIRST_PERSON_LOCK then
         SetFollowPedCamViewMode(4)
@@ -12,8 +13,6 @@ Citizen.CreateThread(function()
     for i = 1, 15 do
         EnableDispatchService(i, false)
     end
-
-    Utils.AddSafeZoneBlips()
     
     while true do
         Wait(0)

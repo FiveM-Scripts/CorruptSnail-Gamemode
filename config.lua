@@ -14,8 +14,6 @@ Config = {
 }
 
 Config.Spawning = {
-    -- Time between each "tick" for operations (in ms)
-    TICK_RATE = 500,
     -- Min distance between players to decide one "host"
     HOST_DECIDE_DIST = 200.0,
     -- Set the default spawnpoints when joining the server.
@@ -54,7 +52,7 @@ Config.Spawning = {
 
 Config.Spawning.Zombies = {
     -- Max amount of spawned zombies at once by you
-    MAX_AMOUNT = 100,
+    MAX_AMOUNT = 75,
     -- Chance a zombie receives a special attributes (per attribute, 0 - 100)
     ATTR_CHANCE = 25,
     -- Max Health
@@ -72,4 +70,94 @@ Config.Spawning.Zombies = {
     -- Model of zombies
     -- TODO: List of models
     ZOMBIE_MODEL = "u_m_y_zombie_01"
+}
+
+Config.Spawning.Safezones = {
+    -- Min distance to safezone to spawn guards
+    SPAWN_DIST = 300.0,
+    -- Guard Weapons
+    GUARD_WEAPONS = {
+        "WEAPON_COMBATMG",
+        "WEAPON_MINIGUN",
+        "WEAPON_ASSAULTSHOTGUN"
+    },
+    -- Safezones
+    SAFEZONES = {
+        {
+            -- LS Lester's Hideout
+            Core = { 717.25, -964.09 },
+            GuardSpawns = {
+                { 711.76, -979.43, 24.11, 183.15 },
+                { 723.64, -978.59, 24.13, 223.51 },
+                { 742.28, -969.73, 24.52, 272.48 },
+                { 689.58, -1028.74, 22.43, 242.04 },
+                { 663.61, -1020.4, 22.28, 187.31 },
+                { 659.81, -941.82, 21.88, 322.89 },
+                { 750.31, -936.90, 24.96, 172.58 }
+            }
+        },
+        {
+            -- Sandy Shores Police Station
+            Core = { 1853.61, 3686.79 },
+            GuardSpawns = {
+                { 1849.08, 3678.36, 34.27, 210.17 },
+                { 1864.21, 3686.78, 34.27, 212.44 },
+                { 1848.68, 3699.51, 34.27, 31.72 },
+                { 1817.18, 3680.22, 34.28, 58.85 },
+                { 1815.68, 3669.67, 34.28, 117.48 },
+                { 1961.26, 3735.42, 32.37, 201.27 },
+                { 1971.52, 3741.76, 32.33, 160.78 }
+            }
+        },
+        {
+            -- Paleto Bay Bank
+            Core = { -106.72, 6466.90 },
+            GuardSpawns = {
+                { -110.63, 6457.0, 31.46, 165.7 },
+                { -116.71, 6462.79, 31.47, 91.52 },
+                { -142.54, 6466.9, 31.72, 98.25 },
+                { -111.89, 6440.0, 31.48, 283.98 }
+            }
+        },
+        {
+            -- LS Michael's House
+            Core = { -806.56, 177.16 },
+            GuardSpawns = {
+                { -816.0, 180.16, 72.15, 247.69 },
+                { -825.08, 184.42, 71.88, 148.37 },
+                { -848.01, 164.45, 66.62, 135.81 },
+                { -848.42, 153.59, 65.36, 69.32 },
+                { -793.51, 169.16, 71.66, 200.26 },
+                { -780.34, 185.82, 72.84, 112.88 },
+                { -797.5, 186.38, 72.61, 167.02 }
+            }
+        },
+        {
+            -- LS Franklin's (Old) House
+            Core = { -12.39, -1435.02 },
+            GuardSpawns = {
+                { -11.39, -1447.97, 30.72, 200.2 },
+                { -17.55, -1448.32, 30.65, 128.65 },
+                { -10.64, -1421.21, 30.68, 1.72 },
+                { -8.97, -1476.65, 30.52, 311.24 },
+                { -80.54, -1460.95, 32.60, 169.36 },
+                { -56.04, -1479.99, 32.16, 54.37 }
+            }
+        },
+        {
+            -- Mount Chilliad Altruist Camp
+            Core = { -1128.17, 4923.42 },
+            GuardSpawns = {
+                { -1035.24, 4908.41, 207.77, 336.9 },
+                { -1041.7, 4920.35, 207.42, 327.48 },
+                { -1087.33, 4896.38, 214.41, 352.9 },
+                { -1083.72, 4933.76, 229.22, 118.28 },
+                { -1137.07, 4935.04, 222.27, 253.97 },
+                { -1143.03, 4912.33, 220.97, 324.59 },
+                { -1184.75, 4927.64, 222.82, 84.36 },
+                { -1065.5, 4892.92, 223.07, 238.06 },
+                { -1086.82, 4975.08, 209.41, 347.96 }
+            }
+        }
+    }
 }

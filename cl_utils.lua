@@ -121,15 +121,14 @@ function Utils.GetRandomPlayer()
     return math.random(#GetActivePlayers())
 end
 
-function Utils.AddSafeZoneBlips()
-    for k,v in pairs(Config.Spawning.SPAWN_POINTS) do
-        local blip = AddBlipForCoord(v.x, v.y, v.z)
+function Utils.CreateLoadedInThread(func)
+    Citizen.CreateThread(function()
+        while not NetworkIsSessionActive() do
+            Wait(100)
+        end
 
-        SetBlipSprite(blip, 487)
-        SetBlipAsShortRange(blip, true)
-        SetBlipScale(blip, 0.9)
-        SetBlipNameFromTextFile(blip, "BLIP_CPOINT")
-    end
+        func()
+    end)
 end
 
 function Utils.LoadInteriors()
