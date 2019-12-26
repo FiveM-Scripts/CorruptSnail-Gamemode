@@ -18,7 +18,7 @@ function playerHurt()
 	SetPedMovementClipset(GetPlayerPed(-1), 'move_m@injured', true)
 end
 
-function NotHurt()
+function playerNotHurt()
     hurt = false
     ResetPedMovementClipset(GetPlayerPed(-1))
 	ResetPedWeaponMovementClipset(GetPlayerPed(-1))
