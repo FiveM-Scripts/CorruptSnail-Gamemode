@@ -1,15 +1,16 @@
 local hurt = false
-local myHealth = GetEntityHealth(GetPlayerPed(-1))
 Citizen.CreateThread(function()
     while true do
         Citizen.Wait(250)
+        local myHealth = GetEntityHealth(GetPlayerPed(-1))
         SendNUIMessage({
             health = myHealth;
         })
         if myHealth <= 159 then
             playerHurt()
-            elseif hurt and myHealth > 130 then
+        elseif hurt == true and myHealth > 130 then
             playerNotHurt()
+        end
     end
 end)
 
