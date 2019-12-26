@@ -1,4 +1,5 @@
 local hurt = false
+local myHealth = GetEntityHealth(GetPlayerPed(-1))
 Citizen.CreateThread(function()
     while true do
         Citizen.Wait(250)
