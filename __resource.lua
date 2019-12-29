@@ -20,5 +20,6 @@ client_scripts {
 	"spawning/cl_player.lua",
 	"spawning/cl_zombies.lua",
 	"spawning/cl_savezones.lua",
-	"cl_hud.lua"
+	"cl_hud.lua",
+	"cl_map.lua"
 }
