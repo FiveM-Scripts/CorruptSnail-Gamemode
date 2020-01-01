@@ -9,21 +9,22 @@ local Maps = {}
 local collected = false
 
 Citizen.CreateThread(function()
-AddEventHandler('playerSpawned', function()
-	Citizen.CreateThread(function()
-		for _, prop in ipairs(MapCoords) do
-			MapSpawning = CreateObject(GetHashKey(Map), prop.x, prop.y, prop.z - 1, false, false, true)
+	AddEventHandler('playerSpawned', function()
+		Citizen.CreateThread(function()
+			for _, prop in ipairs(MapCoords) do
+				MapSpawning = CreateObject(GetHashKey(Map), prop.x, prop.y, prop.z - 1, false, false, true)
 			
-			blip = AddBlipForEntity(MapSpawning)
-			SetBlipSprite(blip, 274)
-			SetBlipAsShortRange(blip, true)
-			SetBlipAlpha(blip, 255)
-			SetBlipScale(blip, 0.5)
-			BeginTextCommandSetBlipName("STRING")
-			AddTextComponentString('Map') 
-			EndTextCommandSetBlipName(blip)
-			table.insert(Maps, MapSpawning)
-		end	
+				blip = AddBlipForEntity(MapSpawning)
+				SetBlipSprite(blip, 274)
+				SetBlipAsShortRange(blip, true)
+				SetBlipAlpha(blip, 255)
+				SetBlipScale(blip, 0.5)
+				BeginTextCommandSetBlipName("STRING")
+				AddTextComponentString('Map') 
+				EndTextCommandSetBlipName(blip)
+				table.insert(Maps, MapSpawning)
+			end	
+		end)
 	end)
 end)
 
@@ -31,9 +32,9 @@ Citizen.CreateThread(function()
 	while true do
 		Citizen.Wait(1)
 		for i, MapSpawning in pairs(Maps) do
-			playerX, playerY, playerZ = table.unpack(GetEntityCoords(GetPlayerPed(-1), true))
-			propX, propY, propZ = table.unpack(GetEntityCoords(MapSpawning, true))
-			if(Vdist(playerX, playerY, playerZ, propX, propY, propZ) < 1.5) then				
+			local playerCoords = GetEntityCoords(PlayerPedId())
+			local propCoords = GetEntityCoords(MapSpawning)
+			if(Vdist(playerCoords.x, playerCoords.y, playerCoords.z, propCoords.x, propCoords.y, propCoords.z) < 1.5) then				
 				DisplayHelpText("Press ~INPUT_CONTEXT~ to get the map.")
 				if IsControlJustReleased(1, 51) then
 					ShowNotification("Picked up: ~g~[Map]")
@@ -47,13 +48,11 @@ Citizen.CreateThread(function()
 				DeleteObject(MapSpawning)
 				RemoveBlip(blip)
 				table.remove(Maps, i)
+				collected = false
 			end
 		end
 		if collected == true then
 			DisplayAllMap()
-		end
-		if IsPedDeadOrDying(GetPlayerPed(-1),1) then
-			collected == false
 		end
 	end
 end)
