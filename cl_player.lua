@@ -7,7 +7,7 @@ function Player.IsSpawnHost()
 
     for _, playerId in ipairs(GetActivePlayers()) do
         if playerId ~= mPlayerId then
-            if GetPlayerServerId(playerId) > mServerId and Util.GetDistanceBetweenCoords(mPlayerPedPos,
+            if GetPlayerServerId(playerId) > mServerId and Utils.GetDistanceBetweenCoords(mPlayerPedPos,
                 GetEntityCoords(GetPlayerPed(playerId))) <= Config.Spawning.HOST_DECIDE_DIST then
                 return false
             end
