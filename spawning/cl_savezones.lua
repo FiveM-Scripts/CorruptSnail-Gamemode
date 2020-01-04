@@ -31,7 +31,7 @@ local function SpawnGuard(guardSpawn)
     DecorSetInt(guard, GUARDSPAWN_ID_DECOR, guardSpawn.Id)
 end
 
-function HandleGuardSpawning()
+local function HandleGuardSpawning()
     local untilPause = 10
     local spawnedIds = {}
     for ped, pedData in pairs(g_peds) do
