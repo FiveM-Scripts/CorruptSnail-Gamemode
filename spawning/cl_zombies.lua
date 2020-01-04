@@ -31,7 +31,7 @@ local function ZombifyPed(ped)
     SetPedCombatAbility(ped, 2)
     SetPedCombatRange(ped, 2)
 
-    SetAiMeleeWeaponDamageModifier(4.0)
+    SetAiMeleeWeaponDamageModifier(9999.0)
     SetPedRagdollBlockingFlags(ped, 4)
     SetPedCanRagdollFromPlayerImpact(ped, false)
     SetPedCanPlayAmbientAnims(ped, false)
