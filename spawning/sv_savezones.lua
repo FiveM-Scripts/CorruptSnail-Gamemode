@@ -1,4 +1,5 @@
 Citizen.CreateThread(function()
+ while true do
     Citizen.Wait(500)
     local count = 0
     local spawned = false
@@ -10,4 +11,5 @@ Citizen.CreateThread(function()
             spawned = true
         end
     end
+end
 end)
