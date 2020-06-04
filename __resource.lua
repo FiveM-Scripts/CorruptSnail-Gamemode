@@ -14,3 +14,7 @@ client_scripts {
 	"spawning/cl_zombies.lua",
 	"spawning/cl_savezones.lua"
 }
+
+server_scripts{
+    "spawning/sv_savezones.lua"
+}

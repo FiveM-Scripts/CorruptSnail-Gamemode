@@ -55,6 +55,7 @@ local function HandleGuardSpawning()
 
     for _, safezone in ipairs(Config.Spawning.Safezones.SAFEZONES) do
         for _, guardSpawn in ipairs(safezone.GuardSpawns) do
+            
             if guardSpawn.Id and not spawnedIds[guardSpawn.Id] then
                 SpawnGuard(guardSpawn)
             end
@@ -62,12 +63,9 @@ local function HandleGuardSpawning()
     end
 end
 
-Utils.CreateLoadedInThread(function()
-    Wait(250)
-
-    if Player.IsSpawnHost() then
-        HandleGuardSpawning()
-    end
+RegisterNetEvent("GuardSpawn")
+AddEventHandler("GuardSpawn", function()
+    HandleGuardSpawning()
 end)
 
 Citizen.CreateThread(function()
