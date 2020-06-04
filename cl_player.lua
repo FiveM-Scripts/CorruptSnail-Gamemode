@@ -2,7 +2,7 @@ Player = {}
 
 function Player.IsSpawnHost()
     local mPlayerId = PlayerId()
-    local mServerId = GetPlayerServerId(playerId)
+    local mServerId = GetPlayerServerId(mPlayerId)
     local mPlayerPedPos = GetEntityCoords(PlayerPedId())
 
     for _, playerId in ipairs(GetActivePlayers()) do
